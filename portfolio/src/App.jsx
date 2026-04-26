@@ -131,6 +131,8 @@ function App() {
     ],
     [],
   )
+  const techTrackA = useMemo(() => techStack.slice(0, Math.ceil(techStack.length / 2)), [techStack])
+  const techTrackB = useMemo(() => techStack.slice(Math.ceil(techStack.length / 2)), [techStack])
 
   useEffect(() => {
     const readProgress = (id, offset = 0) => {
@@ -248,23 +250,25 @@ function App() {
       <main className="background">
         <div className="content-shell">
           <section id="about" className={`about-section ${introVisible ? 'is-visible' : ''}`}>
-            <p className="intro-line from-left">
-              Computer science student
-            </p>
-            <p className="intro-line from-right">
-              building full stack applications and
-            </p>
-            <p className="intro-line from-left">
-              data driven systems, turning ideas
-            </p>
-            <p className="intro-line from-right">
-              into real working solutions.
-            </p>
+            <div className="about-card">
+              <p className="intro-line from-left">
+                Computer science student
+              </p>
+              <p className="intro-line from-right">
+                building full stack applications and
+              </p>
+              <p className="intro-line from-left">
+                data driven systems, turning ideas
+              </p>
+              <p className="intro-line from-right">
+                into real working solutions.
+              </p>
+            </div>
           </section>
 
           <section id="experience" className={`experience-wrapper ${workVisible ? 'is-visible' : ''}`}>
             <div className="experience-card">
-              <div className="green-rectangle-behind">
+              <div className="experience-heading">
                 <h2>Work and Volunteer Experience</h2>
               </div>
               <div key={activeExperience} className="experience-content">
@@ -286,6 +290,14 @@ function App() {
                 <button onClick={previousExperience} aria-label="Previous experience">
                   <img src={arrowLeft} alt="" />
                 </button>
+                <div className="experience-dots" aria-hidden="true">
+                  {experiences.map((experience, index) => (
+                    <span
+                      key={experience.company}
+                      className={index === activeExperience ? 'is-active' : ''}
+                    ></span>
+                  ))}
+                </div>
                 <button onClick={nextExperience} aria-label="Next experience">
                   <img src={arrowRight} alt="" />
                 </button>
@@ -295,15 +307,23 @@ function App() {
 
           <section id="stack" className={`stack-section ${stackVisible ? 'is-visible' : ''}`}>
             <h2 className="stack-title">My Tech Stack</h2>
-            <div id="projects" className="stack-grid">
-              {techStack.map((logo, index) => (
-                <img
-                  key={`${logo}-${index}`}
-                  src={logo}
-                  alt="Technology logo"
-                  style={{ transitionDelay: `${index * 12}ms` }}
-                />
-              ))}
+            <p className="stack-subtitle">Tools and technologies I work with</p>
+
+            <div id="projects" className="stack-carousel">
+              <div className="stack-track stack-track-a">
+                {[...techTrackA, ...techTrackA].map((logo, index) => (
+                  <div className="stack-pill" key={`${logo}-a-${index}`}>
+                    <img src={logo} alt="Technology logo" />
+                  </div>
+                ))}
+              </div>
+              <div className="stack-track stack-track-b">
+                {[...techTrackB, ...techTrackB].map((logo, index) => (
+                  <div className="stack-pill" key={`${logo}-b-${index}`}>
+                    <img src={logo} alt="Technology logo" />
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
         </div>
