@@ -42,13 +42,6 @@ import './App.css'
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 const phase = (value, start, end) => clamp((value - start) / (end - start))
 
-const titleWordTimeline = [
-  { label: 'Work', start: -0.02, end: 0.18 },
-  { label: 'and', start: 0.19, end: 0.34 },
-  { label: 'Volunteer', start: 0.35, end: 0.52 },
-  { label: 'Experience', start: 0.53, end: 0.68 },
-]
-
 function OptionalExperienceImage({ src, fallback, alt, label, className = '', style }) {
   const [failed, setFailed] = useState(false)
   const imageSource = failed ? fallback : src
@@ -99,6 +92,7 @@ function App() {
             fromY: 70,
             rotate: -8,
             delay: 0,
+            zIndex: 2,
           },
           {
             src: '/experience/unify-group-formal.jpg',
@@ -110,6 +104,7 @@ function App() {
             fromY: 45,
             rotate: 5,
             delay: 0.015,
+            zIndex: 4,
           },
           {
             src: '/experience/unify-group-social.jpg',
@@ -121,6 +116,7 @@ function App() {
             fromY: 190,
             rotate: 7,
             delay: 0.03,
+            zIndex: 3,
           },
           {
             src: '/experience/unify-live-appstore.jpg',
@@ -132,6 +128,7 @@ function App() {
             fromY: 170,
             rotate: -5,
             delay: 0.045,
+            zIndex: 1,
           },
         ],
       },
@@ -153,17 +150,6 @@ function App() {
         accent: 'cool',
         media: [
           {
-            src: '/experience/subvision_logo.png',
-            fallback: subvisionLogo,
-            alt: 'Subvision Robotics logo',
-            label: 'Robotics platform',
-            className: 'logo-card',
-            fromX: -160,
-            fromY: 100,
-            rotate: -6,
-            delay: 0,
-          },
-          {
             src: '/experience/subvision-robot.jpg',
             fallback: subvisionLogo,
             alt: 'Subvision Robotics wheeled robot prototype',
@@ -173,6 +159,7 @@ function App() {
             fromY: 50,
             rotate: 6,
             delay: 0.015,
+            zIndex: 2,
           },
           {
             src: '/experience/subvision-cad.jpg',
@@ -184,6 +171,7 @@ function App() {
             fromY: 190,
             rotate: 4,
             delay: 0.03,
+            zIndex: 3,
           },
           {
             src: '/experience/subvision-hull-points.jpg',
@@ -195,6 +183,7 @@ function App() {
             fromY: 180,
             rotate: -5,
             delay: 0.045,
+            zIndex: 1,
           },
         ],
       },
@@ -257,7 +246,6 @@ function App() {
       bashLogo,
       pytorchLogo,
       matplotlibLogo,
-      linkedinLogo,
     ],
     [],
   )
@@ -331,28 +319,16 @@ function App() {
       ? 0
       : clamp((scrollProgress.hero - 0.48) / 0.1)
 
-  const getTitleWordStyle = ({ start, end }) => {
-    const progress = phase(scrollProgress.experience, start, end)
-    const opacity = progress <= 0 || progress >= 1 ? 0 : Math.sin(progress * Math.PI)
-    const y = 120 - progress * 250
-
-    return {
-      opacity,
-      transform: `translate3d(0, ${y}px, 0)`,
-    }
-  }
-
-  const assembledTitleProgress = phase(scrollProgress.experience, 0.66, 0.74)
-  const assembledTitleLift = phase(scrollProgress.experience, 0.78, 0.84)
-  const assembledTitleOpacity = assembledTitleProgress * (1 - phase(scrollProgress.experience, 0.96, 1))
+  const assembledTitleProgress = phase(scrollProgress.experience, 0, 0.035)
+  const assembledTitleOpacity = assembledTitleProgress
   const assembledTitleStyle = {
     opacity: assembledTitleOpacity,
-    transform: `translate3d(0, ${(1 - assembledTitleProgress) * 52 - assembledTitleLift * 28}px, 0)`,
+    transform: `translate3d(0, ${(1 - assembledTitleProgress) * 34}px, 0)`,
   }
 
   const getPanelStyle = (start, end) => {
-    const enter = phase(scrollProgress.experience, start, start + 0.06)
-    const exit = end >= 1 ? 0 : phase(scrollProgress.experience, end - 0.04, end)
+    const enter = phase(scrollProgress.experience, start, start + 0.045)
+    const exit = end >= 1 ? 0 : phase(scrollProgress.experience, end - 0.035, end)
     const opacity = enter * (1 - exit)
 
     return {
@@ -363,7 +339,7 @@ function App() {
   }
 
   const getTextStyle = (start) => {
-    const enter = phase(scrollProgress.experience, start + 0.045, start + 0.085)
+    const enter = phase(scrollProgress.experience, start + 0.055, start + 0.095)
 
     return {
       opacity: enter,
@@ -372,12 +348,13 @@ function App() {
   }
 
   const getMediaStyle = (panelStart, panelEnd, item) => {
-    const enter = phase(scrollProgress.experience, panelStart + item.delay, panelStart + item.delay + 0.075)
-    const exit = panelEnd >= 1 ? 0 : phase(scrollProgress.experience, panelEnd - 0.04, panelEnd)
+    const enter = phase(scrollProgress.experience, panelStart + item.delay, panelStart + item.delay + 0.06)
+    const exit = panelEnd >= 1 ? 0 : phase(scrollProgress.experience, panelEnd - 0.035, panelEnd)
 
     return {
       opacity: enter * (1 - exit),
       transform: `translate3d(${(1 - enter) * item.fromX}px, ${(1 - enter) * item.fromY - exit * 90}px, 0) rotate(${(1 - enter) * item.rotate}deg) scale(${0.88 + enter * 0.12})`,
+      zIndex: item.zIndex,
     }
   }
 
@@ -446,14 +423,6 @@ function App() {
 
           <section id="experience" className={`experience-wrapper ${workVisible ? 'is-visible' : ''}`}>
             <div className="experience-sticky">
-              <div className="experience-title-stage" aria-hidden="true">
-                {titleWordTimeline.map((word) => (
-                  <span key={word.label} className="experience-title-word" style={getTitleWordStyle(word)}>
-                    {word.label}
-                  </span>
-                ))}
-              </div>
-
               <h2 className="experience-title-assembled" style={assembledTitleStyle}>
                 <span>Work</span>
                 <span>and</span>
@@ -463,8 +432,8 @@ function App() {
 
               <div className="experience-showcase">
                 {featuredExperiences.map((experience, index) => {
-                  const start = index === 0 ? 0.72 : 0.84
-                  const end = index === 0 ? 0.9 : 0.99
+                  const start = index === 0 ? 0.04 : 0.42
+                  const end = index === 0 ? 0.34 : 0.74
 
                   return (
                     <article
@@ -506,8 +475,8 @@ function App() {
                   )
                 })}
 
-                <article className="experience-panel volunteer-panel" style={getPanelStyle(0.92, 1)}>
-                  <div className="volunteer-grid" style={getTextStyle(0.9)}>
+                <article className="experience-panel volunteer-panel" style={getPanelStyle(0.78, 1)}>
+                  <div className="volunteer-grid" style={getTextStyle(0.78)}>
                     {volunteerExperiences.map((experience) => (
                       <div className="volunteer-card" key={experience.company}>
                         <img src={experience.logo} alt={`${experience.company} logo`} />
@@ -542,6 +511,10 @@ function App() {
                   </div>
                 ))}
               </div>
+            </div>
+            <div className="stack-projects-teaser">
+              <span>Come see my projects</span>
+              <span aria-hidden="true">&rarr;</span>
             </div>
           </section>
         </div>
