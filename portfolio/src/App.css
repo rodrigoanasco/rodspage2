@@ -1299,6 +1299,10 @@ footer p {
     font-size: 16px;
   }
 
+  .rectangle {
+    overflow: hidden;
+  }
+
   .background {
     padding: 0 10px 30px;
   }
@@ -1527,5 +1531,130 @@ footer p {
     order: 2;
     font-size: 10px;
     text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-section {
+    height: 170vh;
+  }
+
+  .top-nav {
+    top: 22px;
+    left: 16px;
+    right: 16px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+
+  .left-logo-home {
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .nav-actions {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .top-nav nav {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .top-nav a {
+    font-size: 12px;
+    line-height: 1.1;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .theme-toggle {
+    min-height: 34px;
+    margin-top: 2px;
+    padding: 5px 10px 5px 6px;
+    font-size: 0.78rem;
+  }
+
+  .hero-title-layer {
+    place-content: start center;
+    padding: 210px 14px 0;
+  }
+
+  .hero-name-row {
+    width: 100%;
+    max-width: 420px;
+    gap: 12px;
+  }
+
+  .rectangle {
+    height: 168px;
+  }
+
+  .name-and-email,
+  .name-text-wrap {
+    width: 100%;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 14px;
+    margin: 0;
+  }
+
+  .rodrigo,
+  .anasco {
+    max-width: 100%;
+    font-size: 5.05rem;
+    line-height: 0.92;
+    letter-spacing: 0;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  .hero-email {
+    max-width: 100%;
+    margin-top: 8px;
+    font-size: 1.15rem;
+    line-height: 1.12;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .welcome-overlay {
+    padding: 0 18px;
+    text-align: center;
+    font-size: 2.4rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .top-nav a {
+    font-size: 10px;
+  }
+
+  .left-logo-home {
+    font-size: 24px;
+  }
+
+  .hero-title-layer {
+    padding-top: 198px;
+  }
+
+  .rectangle {
+    height: 148px;
+  }
+
+  .rodrigo,
+  .anasco {
+    font-size: 4.35rem;
+  }
+
+  .hero-email {
+    font-size: 1rem;
   }
 }
