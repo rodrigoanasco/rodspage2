@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import AboutPage from './AboutPage'
 import ContactPage from './ContactPage'
 import ProjectsPage from './ProjectsPage'
+import ThemeToggle from './ThemeToggle'
 import landingImage from './assets/images/landing_page_image.png'
 import unifyLogo from './assets/images/Experience/unify_logo.png'
 import subvisionLogo from './assets/images/Experience/subvision_logo.png'
@@ -47,6 +48,15 @@ const scrollToPageTop = (behavior = 'auto') => {
   window.scrollTo({ top: 0, left: 0, behavior })
 }
 
+const getInitialTheme = () => {
+  try {
+    const savedTheme = window.localStorage.getItem('theme')
+    return savedTheme === 'light' ? 'light' : 'dark'
+  } catch {
+    return 'dark'
+  }
+}
+
 function OptionalExperienceImage({ src, fallback, alt, label, className = '', style }) {
   const [failed, setFailed] = useState(false)
   const imageSource = failed ? fallback : src
@@ -67,6 +77,7 @@ function App() {
     return 'home'
   })
   const [pendingHash, setPendingHash] = useState(null)
+  const [theme, setTheme] = useState(getInitialTheme)
   const [introVisible, setIntroVisible] = useState(false)
   const [workVisible, setWorkVisible] = useState(false)
   const [stackVisible, setStackVisible] = useState(false)
@@ -268,6 +279,16 @@ function App() {
   const techTrackB = useMemo(() => techStack.slice(Math.ceil(techStack.length / 2)), [techStack])
 
   useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    document.documentElement.style.colorScheme = theme
+    try {
+      window.localStorage.setItem('theme', theme)
+    } catch {
+      // Theme still updates even if storage is unavailable.
+    }
+  }, [theme])
+
+  useEffect(() => {
     if (!('scrollRestoration' in window.history)) return undefined
 
     const previousScrollRestoration = window.history.scrollRestoration
@@ -417,6 +438,10 @@ function App() {
     setPendingHash(null)
   }
 
+  const toggleTheme = () => {
+    setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'))
+  }
+
   const heroTextOpacity = clamp(1 - scrollProgress.hero / 0.35)
   const heroImageOpacity =
     scrollProgress.hero < 0.2625
@@ -434,6 +459,8 @@ function App() {
         onAbout={navigateToAbout}
         onProjects={navigateToProjects}
         onContact={navigateToContact}
+        theme={theme}
+        onThemeToggle={toggleTheme}
       />
     )
   }
@@ -445,6 +472,8 @@ function App() {
         onAbout={navigateToAbout}
         onProjects={navigateToProjects}
         onContact={navigateToContact}
+        theme={theme}
+        onThemeToggle={toggleTheme}
       />
     )
   }
@@ -456,6 +485,8 @@ function App() {
         onAbout={navigateToAbout}
         onProjects={navigateToProjects}
         onContact={navigateToContact}
+        theme={theme}
+        onThemeToggle={toggleTheme}
       />
     )
   }
@@ -472,12 +503,15 @@ function App() {
           />
           <header className="top-nav">
             <span className="left-logo-home">Rodrigo.A</span>
-            <nav>
-              <a href="/" onClick={navigateToHomeSection()}>Home</a>
-              <a href="/about" onClick={navigateToAbout}>About me</a>
-              <a href="/projects" onClick={navigateToProjects}>Projects</a>
-              <a href="/contact" onClick={navigateToContact}>Contact</a>
-            </nav>
+            <div className="nav-actions">
+              <nav>
+                <a href="/" onClick={navigateToHomeSection()}>Home</a>
+                <a href="/about" onClick={navigateToAbout}>About me</a>
+                <a href="/projects" onClick={navigateToProjects}>Projects</a>
+                <a href="/contact" onClick={navigateToContact}>Contact</a>
+              </nav>
+              <ThemeToggle theme={theme} onToggle={toggleTheme} />
+            </div>
           </header>
 
           <div className="hero-title-layer" style={{ opacity: heroTextOpacity }}>

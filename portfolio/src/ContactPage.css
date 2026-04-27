@@ -1,9 +1,7 @@
 .contact-page {
   min-height: 100vh;
   color: var(--text-main);
-  background:
-    linear-gradient(130deg, rgba(246, 232, 210, 0.96) 0%, rgba(222, 237, 229, 0.94) 48%, rgba(232, 235, 247, 0.98) 100%),
-    linear-gradient(180deg, #f7f1e5 0%, #e7eee9 52%, #edf1fb 100%);
+  background: var(--page-gradient);
   overflow-x: hidden;
 }
 
@@ -23,7 +21,7 @@
 }
 
 .contact-page .contact-top-nav nav a {
-  color: rgba(17, 17, 17, 0.72);
+  color: var(--nav-link);
   transition: color 180ms ease, transform 180ms ease;
 }
 
@@ -70,6 +68,10 @@
   .contact-page .contact-top-nav nav {
     gap: 12px;
     flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .contact-page .contact-top-nav .nav-actions {
     justify-content: center;
   }
 

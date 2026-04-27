@@ -1,9 +1,7 @@
 .about-page {
   min-height: 100vh;
   color: var(--text-main);
-  background:
-    linear-gradient(130deg, rgba(246, 232, 210, 0.96) 0%, rgba(222, 237, 229, 0.94) 48%, rgba(232, 235, 247, 0.98) 100%),
-    linear-gradient(180deg, #f7f1e5 0%, #e7eee9 52%, #edf1fb 100%);
+  background: var(--page-gradient);
   overflow-x: hidden;
 }
 
@@ -23,7 +21,7 @@
 }
 
 .about-page .about-top-nav nav a {
-  color: rgba(17, 17, 17, 0.72);
+  color: var(--nav-link);
   transition: color 180ms ease, transform 180ms ease;
 }
 
@@ -109,10 +107,10 @@
   position: absolute;
   margin: 0;
   overflow: hidden;
-  border: 1px solid rgba(217, 221, 215, 0.86);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.62);
-  box-shadow: 0 18px 44px rgba(17, 17, 17, 0.12);
+  background: var(--surface);
+  box-shadow: var(--shadow-strong);
 }
 
 .about-main-photo {
@@ -160,10 +158,10 @@
 .about-values,
 .about-personal,
 .about-hobbies {
-  border: 1px solid rgba(217, 221, 215, 0.88);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.42);
-  box-shadow: 0 14px 34px rgba(17, 17, 17, 0.07);
+  background: var(--surface-soft);
+  box-shadow: var(--shadow-soft);
 }
 
 .about-intro-grid article {
@@ -175,7 +173,7 @@
 .about-value-list article:hover {
   transform: translateY(-4px);
   border-color: rgba(129, 161, 139, 0.58);
-  background: rgba(255, 255, 255, 0.62);
+  background: var(--surface);
 }
 
 .about-intro-grid span {
@@ -234,9 +232,9 @@
 
 .about-value-list article {
   padding: 22px;
-  border: 1px solid rgba(217, 221, 215, 0.82);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(247, 241, 229, 0.46);
+  background: var(--surface);
   transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
 }
 
@@ -266,9 +264,9 @@
   gap: 12px;
   margin-top: 24px;
   padding: 8px 14px;
-  border: 1px solid rgba(217, 221, 215, 0.9);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.58);
+  background: var(--surface);
   color: var(--text-main);
   font-family: 'Inter', sans-serif;
   font-weight: 700;
@@ -293,7 +291,7 @@
   margin: 0;
   overflow: hidden;
   border-radius: 8px;
-  background: #ffffff;
+  background: var(--surface-strong);
 }
 
 .about-gallery figure {
@@ -322,7 +320,7 @@
   padding: 8px 10px;
   border-radius: 6px;
   color: var(--text-main);
-  background: rgba(244, 242, 236, 0.84);
+  background: var(--caption-bg);
   font-family: 'Inter', sans-serif;
   font-size: 0.82rem;
   font-weight: 700;
@@ -401,6 +399,10 @@
   .about-page .about-top-nav nav {
     gap: 12px;
     flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .about-page .about-top-nav .nav-actions {
     justify-content: center;
   }
 

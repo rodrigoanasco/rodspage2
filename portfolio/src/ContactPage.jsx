@@ -2,9 +2,10 @@ import { useEffect } from 'react'
 import ContactSection from './ContactSection'
 import instagramLogo from './assets/images/tech_stack/instagram 1.png'
 import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
+import ThemeToggle from './ThemeToggle'
 import './ContactPage.css'
 
-function ContactPage({ onHome, onAbout, onProjects, onContact }) {
+function ContactPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggle }) {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -13,12 +14,15 @@ function ContactPage({ onHome, onAbout, onProjects, onContact }) {
     <div className="contact-page">
       <header className="top-nav contact-top-nav">
         <a className="left-logo-home contact-logo-link" href="/" onClick={onHome}>Rodrigo.A</a>
-        <nav>
-          <a href="/" onClick={onHome}>Home</a>
-          <a href="/about" onClick={onAbout}>About me</a>
-          <a href="/projects" onClick={onProjects}>Projects</a>
-          <a className="is-active" href="/contact" onClick={onContact}>Contact</a>
-        </nav>
+        <div className="nav-actions">
+          <nav>
+            <a href="/" onClick={onHome}>Home</a>
+            <a href="/about" onClick={onAbout}>About me</a>
+            <a href="/projects" onClick={onProjects}>Projects</a>
+            <a className="is-active" href="/contact" onClick={onContact}>Contact</a>
+          </nav>
+          <ThemeToggle theme={theme} onToggle={onThemeToggle} />
+        </div>
       </header>
 
       <main className="contact-page-main">

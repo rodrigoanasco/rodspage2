@@ -15,9 +15,10 @@ import aboutTableTennisImage from './assets/images/about_me_images/table_tennis.
 import aboutTryingThingsImage from './assets/images/about_me_images/trying_new_things.JPG'
 import instagramLogo from './assets/images/tech_stack/instagram 1.png'
 import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
+import ThemeToggle from './ThemeToggle'
 import './AboutPage.css'
 
-function AboutPage({ onHome, onAbout, onProjects, onContact }) {
+function AboutPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggle }) {
   const values = [
     {
       label: 'Product-minded',
@@ -70,12 +71,15 @@ function AboutPage({ onHome, onAbout, onProjects, onContact }) {
     <div className="about-page">
       <header className="top-nav about-top-nav">
         <a className="left-logo-home about-logo-link" href="/" onClick={onHome}>Rodrigo.A</a>
-        <nav>
-          <a href="/" onClick={onHome}>Home</a>
-          <a className="is-active" href="/about" onClick={onAbout}>About me</a>
-          <a href="/projects" onClick={onProjects}>Projects</a>
-          <a href="/contact" onClick={onContact}>Contact</a>
-        </nav>
+        <div className="nav-actions">
+          <nav>
+            <a href="/" onClick={onHome}>Home</a>
+            <a className="is-active" href="/about" onClick={onAbout}>About me</a>
+            <a href="/projects" onClick={onProjects}>Projects</a>
+            <a href="/contact" onClick={onContact}>Contact</a>
+          </nav>
+          <ThemeToggle theme={theme} onToggle={onThemeToggle} />
+        </div>
       </header>
 
       <main className="about-main">

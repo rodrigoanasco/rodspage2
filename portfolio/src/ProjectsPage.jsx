@@ -12,6 +12,7 @@ import unifyPreviousVideo from './assets/videos/project_videos/unify_previous.mp
 import stockReportPdf from './assets/videos/CMPT353_Project_Report_TERP-1.pdf'
 import instagramLogo from './assets/images/tech_stack/instagram 1.png'
 import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
+import ThemeToggle from './ThemeToggle'
 import './ProjectsPage.css'
 
 function ProjectVideo({ src, title, variant = 'wide' }) {
@@ -27,7 +28,7 @@ function ProjectVideo({ src, title, variant = 'wide' }) {
   )
 }
 
-function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
+function ProjectsPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggle }) {
   const projects = [
     {
       name: 'Unify',
@@ -164,12 +165,15 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
     <div className="projects-page">
       <header className="top-nav projects-top-nav">
         <a className="left-logo-home projects-logo-link" href="/" onClick={onHome}>Rodrigo.A</a>
-        <nav>
-          <a href="/" onClick={onHome}>Home</a>
-          <a href="/about" onClick={onAbout}>About me</a>
-          <a className="is-active" href="/projects" onClick={onProjects}>Projects</a>
-          <a href="/contact" onClick={onContact}>Contact</a>
-        </nav>
+        <div className="nav-actions">
+          <nav>
+            <a href="/" onClick={onHome}>Home</a>
+            <a href="/about" onClick={onAbout}>About me</a>
+            <a className="is-active" href="/projects" onClick={onProjects}>Projects</a>
+            <a href="/contact" onClick={onContact}>Contact</a>
+          </nav>
+          <ThemeToggle theme={theme} onToggle={onThemeToggle} />
+        </div>
       </header>
 
       <main className="projects-main">
