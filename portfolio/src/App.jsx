@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import AboutPage from './AboutPage'
 import landingImage from './assets/images/landing_page_image.png'
 import unifyLogo from './assets/images/Experience/unify_logo.png'
 import subvisionLogo from './assets/images/Experience/subvision_logo.png'
@@ -41,6 +42,9 @@ import './App.css'
 
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 const phase = (value, start, end) => clamp((value - start) / (end - start))
+const scrollToPageTop = (behavior = 'auto') => {
+  window.scrollTo({ top: 0, left: 0, behavior })
+}
 
 function OptionalExperienceImage({ src, fallback, alt, label, className = '', style }) {
   const [failed, setFailed] = useState(false)
@@ -55,6 +59,8 @@ function OptionalExperienceImage({ src, fallback, alt, label, className = '', st
 }
 
 function App() {
+  const [route, setRoute] = useState(() => (window.location.pathname === '/about' ? 'about' : 'home'))
+  const [pendingHash, setPendingHash] = useState(null)
   const [introVisible, setIntroVisible] = useState(false)
   const [workVisible, setWorkVisible] = useState(false)
   const [stackVisible, setStackVisible] = useState(false)
@@ -253,6 +259,49 @@ function App() {
   const techTrackB = useMemo(() => techStack.slice(Math.ceil(techStack.length / 2)), [techStack])
 
   useEffect(() => {
+    if (!('scrollRestoration' in window.history)) return undefined
+
+    const previousScrollRestoration = window.history.scrollRestoration
+    window.history.scrollRestoration = 'manual'
+
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration
+    }
+  }, [])
+
+  useEffect(() => {
+    const onPopState = () => {
+      const nextRoute = window.location.pathname === '/about' ? 'about' : 'home'
+      if (nextRoute === 'about') scrollToPageTop()
+
+      setRoute(nextRoute)
+      setPendingHash({ hash: window.location.hash })
+    }
+
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
+  useEffect(() => {
+    if (route !== 'home') return
+    if (pendingHash === null) return
+
+    const hash = pendingHash.hash
+
+    if (!hash) {
+      scrollToPageTop('smooth')
+      return
+    }
+
+    window.requestAnimationFrame(() => {
+      const target = document.querySelector(hash)
+      if (target) target.scrollIntoView({ behavior: 'smooth' })
+    })
+  }, [pendingHash, route])
+
+  useEffect(() => {
+    if (route !== 'home') return undefined
+
     const readProgress = (id, offset = 0) => {
       const node = document.getElementById(id)
       if (!node) return 0
@@ -307,7 +356,32 @@ function App() {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
-  }, [])
+  }, [route])
+
+  const navigateToHomeSection = (hash = '') => (event) => {
+    event.preventDefault()
+    const nextPath = hash ? `/${hash}` : '/'
+
+    if (window.location.pathname !== '/' || window.location.hash !== hash) {
+      window.history.pushState({}, '', nextPath)
+    }
+
+    if (!hash) scrollToPageTop()
+    setRoute('home')
+    setPendingHash({ hash })
+  }
+
+  const navigateToAbout = (event) => {
+    event.preventDefault()
+
+    if (window.location.pathname !== '/about') {
+      window.history.pushState({}, '', '/about')
+    }
+
+    scrollToPageTop()
+    setRoute('about')
+    setPendingHash(null)
+  }
 
   const heroTextOpacity = clamp(1 - scrollProgress.hero / 0.35)
   const heroImageOpacity =
@@ -358,6 +432,17 @@ function App() {
     }
   }
 
+  if (route === 'about') {
+    return (
+      <AboutPage
+        onHome={navigateToHomeSection()}
+        onAbout={navigateToAbout}
+        onProjects={navigateToHomeSection('#projects')}
+        onContact={navigateToHomeSection('#contact')}
+      />
+    )
+  }
+
   return (
     <div className="page">
       <section id="home" className="hero-section">
@@ -371,10 +456,10 @@ function App() {
           <header className="top-nav">
             <span className="left-logo-home">Rodrigo.A</span>
             <nav>
-              <a href="#home">Home</a>
-              <a href="#about">About me</a>
-              <a href="#projects">Projects</a>
-              <a href="#contact">Contact</a>
+              <a href="/" onClick={navigateToHomeSection()}>Home</a>
+              <a href="/about" onClick={navigateToAbout}>About me</a>
+              <a href="/#projects" onClick={navigateToHomeSection('#projects')}>Projects</a>
+              <a href="/#contact" onClick={navigateToHomeSection('#contact')}>Contact</a>
             </nav>
           </header>
 
@@ -409,7 +494,7 @@ function App() {
         <div className="content-shell">
           <section id="about" className={`about-section ${introVisible ? 'is-visible' : ''}`}>
             <div className="about-copy">
-              <p className="intro-kicker from-left">Computer science student</p>
+              <p className="intro-kicker from-left">I enjoy...</p>
               <h2 className="intro-statement">
                 <span className="intro-line from-right">building full stack applications and</span>
                 <span className="intro-line from-left">data driven systems, turning ideas</span>
@@ -531,10 +616,10 @@ function App() {
             </a>
           </div>
           <nav className="footer-nav" aria-label="Footer navigation">
-            <a href="#home">Home</a>
-            <a href="#about">About me</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
+            <a href="/" onClick={navigateToHomeSection()}>Home</a>
+            <a href="/about" onClick={navigateToAbout}>About me</a>
+            <a href="/#projects" onClick={navigateToHomeSection('#projects')}>Projects</a>
+            <a href="/#contact" onClick={navigateToHomeSection('#contact')}>Contact</a>
           </nav>
           <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
         </div>
