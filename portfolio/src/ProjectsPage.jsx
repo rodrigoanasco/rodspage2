@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gdscGroupImage from './assets/images/projects_images/GDSC_all_group.jpg'
 import gdscWinnersImage from './assets/images/projects_images/GDSC_us_winners.jpg'
 import sfuAwardImage from './assets/images/projects_images/SFU_CS_AWARD.jpeg'
@@ -16,14 +16,47 @@ import ThemeToggle from './ThemeToggle'
 import './ProjectsPage.css'
 
 function ProjectVideo({ src, title, variant = 'wide' }) {
+  const shellRef = useRef(null)
+  const [shouldLoad, setShouldLoad] = useState(
+    () => typeof window !== 'undefined' && !('IntersectionObserver' in window),
+  )
+
+  useEffect(() => {
+    if (shouldLoad) return undefined
+
+    const node = shellRef.current
+    if (!node) return undefined
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        setShouldLoad(true)
+        observer.disconnect()
+      },
+      { rootMargin: '700px 0px' },
+    )
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [shouldLoad])
+
   return (
-    <div className={`project-video-shell project-video-shell--${variant}`}>
+    <div className={`project-video-shell project-video-shell--${variant}`} ref={shellRef}>
       <div className="project-window-bar" aria-hidden="true">
         <span />
         <span />
         <span />
       </div>
-      <video src={src} title={title} autoPlay muted loop playsInline controls preload="metadata" />
+      <video
+        src={shouldLoad ? src : undefined}
+        title={title}
+        autoPlay={shouldLoad}
+        muted
+        loop
+        playsInline
+        controls
+        preload={shouldLoad ? 'metadata' : 'none'}
+      />
     </div>
   )
 }
@@ -184,10 +217,10 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact, theme, onThemeTo
             <div className="projects-hero-side">
               <div className="projects-hero-visual" aria-hidden="true">
                 <figure className="projects-hero-frame projects-hero-frame-main">
-                  <img src={gdscWinnersImage} alt="" />
+                  <img src={gdscWinnersImage} alt="" decoding="async" fetchPriority="high" />
                 </figure>
                 <figure className="projects-hero-frame projects-hero-frame-secondary">
-                  <img src={sfuAwardImage} alt="" />
+                  <img src={sfuAwardImage} alt="" decoding="async" />
                 </figure>
               </div>
               <p>
@@ -247,7 +280,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact, theme, onThemeTo
                   <div className="project-image-strip">
                     {project.featureImages.map((image) => (
                       <figure key={image.label}>
-                        <img src={image.src} alt={image.alt} />
+                        <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
                         <figcaption>{image.label}</figcaption>
                       </figure>
                     ))}
@@ -283,10 +316,10 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact, theme, onThemeTo
         <div className="footer-inner">
           <div className="footer-socials">
             <a href="https://www.instagram.com/rodr_1201/" target="_blank" rel="noreferrer">
-              <img src={instagramLogo} alt="Instagram" />
+              <img src={instagramLogo} alt="Instagram" loading="lazy" decoding="async" />
             </a>
             <a href="https://www.linkedin.com/in/rodrigo-anasco/" target="_blank" rel="noreferrer">
-              <img src={linkedinLogo} alt="LinkedIn" />
+              <img src={linkedinLogo} alt="LinkedIn" loading="lazy" decoding="async" />
             </a>
           </div>
           <nav className="footer-nav" aria-label="Footer navigation">

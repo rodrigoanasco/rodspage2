@@ -99,13 +99,18 @@ function AboutPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggl
 
           <div className="about-portrait-group" aria-label="Personal photos">
             <figure className="about-main-photo">
-              <img src={aboutVictoriaImage} alt="Rodrigo near the waterfront in Victoria" />
+              <img
+                src={aboutVictoriaImage}
+                alt="Rodrigo near the waterfront in Victoria"
+                decoding="async"
+                fetchPriority="high"
+              />
             </figure>
             <figure className="about-side-photo about-side-photo-top">
-              <img src={aboutCooperImage} alt="Cooper" />
+              <img src={aboutCooperImage} alt="Cooper" loading="lazy" decoding="async" />
             </figure>
             <figure className="about-side-photo about-side-photo-bottom">
-              <img src={aboutObjectRecognitionImage} alt="Object recognition project preview" />
+              <img src={aboutObjectRecognitionImage} alt="Object recognition project preview" loading="lazy" decoding="async" />
             </figure>
           </div>
         </section>
@@ -157,7 +162,7 @@ function AboutPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggl
               community. I like carrying both places with me.
             </p>
             <div className="about-peru-chip">
-              <img src={aboutPeruFlag} alt="Peru flag" />
+              <img src={aboutPeruFlag} alt="Peru flag" loading="lazy" decoding="async" />
               <span>Peru</span>
             </div>
           </div>
@@ -165,7 +170,7 @@ function AboutPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggl
           <div className="about-gallery">
             {gallery.map((item) => (
               <figure key={item.label}>
-                <img src={item.src} alt={item.alt} />
+                <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
                 <figcaption>{item.label}</figcaption>
               </figure>
             ))}
@@ -180,7 +185,7 @@ function AboutPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggl
           <div className="about-hobby-strip">
             {hobbies.map((hobby) => (
               <figure key={hobby.title}>
-                <img src={hobby.image} alt={hobby.title} />
+                <img src={hobby.image} alt={hobby.title} loading="lazy" decoding="async" />
                 <figcaption>{hobby.title}</figcaption>
               </figure>
             ))}
@@ -192,10 +197,10 @@ function AboutPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggl
         <div className="footer-inner">
           <div className="footer-socials">
             <a href="https://www.instagram.com/rodr_1201/" target="_blank" rel="noreferrer">
-              <img src={instagramLogo} alt="Instagram" />
+              <img src={instagramLogo} alt="Instagram" loading="lazy" decoding="async" />
             </a>
             <a href="https://www.linkedin.com/in/rodrigo-anasco/" target="_blank" rel="noreferrer">
-              <img src={linkedinLogo} alt="LinkedIn" />
+              <img src={linkedinLogo} alt="LinkedIn" loading="lazy" decoding="async" />
             </a>
           </div>
           <nav className="footer-nav" aria-label="Footer navigation">

@@ -1,5 +1,7 @@
 .contact-page {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   color: var(--text-main);
   background: var(--page-gradient);
   overflow-x: hidden;
@@ -36,10 +38,15 @@
 }
 
 .contact-page-main {
+  flex: 1;
+  display: flex;
   padding: 58px 0 0;
 }
 
 .contact-page .contact-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
   margin-top: 0;
 }
 

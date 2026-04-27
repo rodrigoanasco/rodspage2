@@ -33,10 +33,10 @@ function ContactPage({ onHome, onAbout, onProjects, onContact, theme, onThemeTog
         <div className="footer-inner">
           <div className="footer-socials">
             <a href="https://www.instagram.com/rodr_1201/" target="_blank" rel="noreferrer">
-              <img src={instagramLogo} alt="Instagram" />
+              <img src={instagramLogo} alt="Instagram" loading="lazy" decoding="async" />
             </a>
             <a href="https://www.linkedin.com/in/rodrigo-anasco/" target="_blank" rel="noreferrer">
-              <img src={linkedinLogo} alt="LinkedIn" />
+              <img src={linkedinLogo} alt="LinkedIn" loading="lazy" decoding="async" />
             </a>
           </div>
           <nav className="footer-nav" aria-label="Footer navigation">

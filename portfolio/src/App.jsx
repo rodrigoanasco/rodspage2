@@ -63,7 +63,7 @@ function OptionalExperienceImage({ src, fallback, alt, label, className = '', st
 
   return (
     <figure className={`experience-image-card ${className}`} style={style}>
-      <img src={imageSource} alt={alt} onError={() => setFailed(true)} />
+      <img src={imageSource} alt={alt} loading="lazy" decoding="async" onError={() => setFailed(true)} />
       <figcaption>{label}</figcaption>
     </figure>
   )
@@ -500,6 +500,8 @@ function App() {
             alt="Rodrigo Anasco portrait"
             className="hero-background-image"
             style={{ opacity: heroImageOpacity }}
+            decoding="async"
+            fetchPriority="high"
           />
           <header className="top-nav">
             <span className="left-logo-home">Rodrigo.A</span>
@@ -600,7 +602,7 @@ function App() {
 
                       <div className="experience-copy">
                         <div className="experience-company-row">
-                          <img src={experience.logo} alt={`${experience.company} logo`} />
+                          <img src={experience.logo} alt={`${experience.company} logo`} loading="lazy" decoding="async" />
                           <div>
                             <p className="experience-period">{experience.period} / {experience.location}</p>
                             <h3>{experience.company}</h3>
@@ -641,7 +643,7 @@ function App() {
                     <div className="volunteer-grid">
                       {volunteerExperiences.map((experience) => (
                         <article className="volunteer-card" key={experience.company}>
-                          <img src={experience.logo} alt={`${experience.company} logo`} />
+                          <img src={experience.logo} alt={`${experience.company} logo`} loading="lazy" decoding="async" />
                           <div>
                             <p className="experience-period">{experience.period}</p>
                             <h3>{experience.company}</h3>
@@ -665,14 +667,14 @@ function App() {
               <div className="stack-track stack-track-a">
                 {[...techTrackA, ...techTrackA].map((logo, index) => (
                   <div className="stack-pill" key={`${logo}-a-${index}`}>
-                    <img src={logo} alt="Technology logo" />
+                    <img src={logo} alt="Technology logo" loading="lazy" decoding="async" />
                   </div>
                 ))}
               </div>
               <div className="stack-track stack-track-b">
                 {[...techTrackB, ...techTrackB].map((logo, index) => (
                   <div className="stack-pill" key={`${logo}-b-${index}`}>
-                    <img src={logo} alt="Technology logo" />
+                    <img src={logo} alt="Technology logo" loading="lazy" decoding="async" />
                   </div>
                 ))}
               </div>
@@ -689,10 +691,10 @@ function App() {
         <div className="footer-inner">
           <div className="footer-socials">
             <a href="https://www.instagram.com/rodr_1201/" target="_blank" rel="noreferrer">
-              <img src={instagramLogo} alt="Instagram" />
+              <img src={instagramLogo} alt="Instagram" loading="lazy" decoding="async" />
             </a>
             <a href="https://www.linkedin.com/in/rodrigo-anasco/" target="_blank" rel="noreferrer">
-              <img src={linkedinLogo} alt="LinkedIn" />
+              <img src={linkedinLogo} alt="LinkedIn" loading="lazy" decoding="async" />
             </a>
           </div>
           <nav className="footer-nav" aria-label="Footer navigation">
