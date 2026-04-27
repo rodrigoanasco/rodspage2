@@ -143,6 +143,7 @@
 }
 
 .project-case {
+  scroll-margin-top: 28px;
   display: grid;
   grid-template-columns: minmax(330px, 0.86fr) minmax(480px, 1.14fr);
   gap: clamp(26px, 5vw, 64px);

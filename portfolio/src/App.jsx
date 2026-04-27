@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import AboutPage from './AboutPage'
-import ContactSection from './ContactSection'
+import ContactPage from './ContactPage'
 import ProjectsPage from './ProjectsPage'
 import landingImage from './assets/images/landing_page_image.png'
 import unifyLogo from './assets/images/Experience/unify_logo.png'
@@ -43,7 +43,6 @@ import matplotlibLogo from './assets/images/tech_stack/matplotlib-original.svg'
 import './App.css'
 
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
-const phase = (value, start, end) => clamp((value - start) / (end - start))
 const scrollToPageTop = (behavior = 'auto') => {
   window.scrollTo({ top: 0, left: 0, behavior })
 }
@@ -64,16 +63,15 @@ function App() {
   const [route, setRoute] = useState(() => {
     if (window.location.pathname === '/about') return 'about'
     if (window.location.pathname === '/projects') return 'projects'
+    if (window.location.pathname === '/contact') return 'contact'
     return 'home'
   })
   const [pendingHash, setPendingHash] = useState(null)
   const [introVisible, setIntroVisible] = useState(false)
   const [workVisible, setWorkVisible] = useState(false)
   const [stackVisible, setStackVisible] = useState(false)
-  const [contactVisible, setContactVisible] = useState(false)
   const [scrollProgress, setScrollProgress] = useState({
     hero: 0,
-    experience: 0,
   })
 
   const featuredExperiences = useMemo(
@@ -84,14 +82,16 @@ function App() {
         company: 'Unify Social',
         role: 'Software Coordinator',
         location: 'Burnaby, BC',
+        headline: 'A newcomer platform built around guidance, community, and confidence.',
         summary:
-          'Building mobile experiences that help newcomers in Canada find guidance, community, and practical next steps.',
+          'Unify helps newcomers in Canada navigate disconnected resources by bringing learning content, personalized settlement tasks, AI support, community spaces, and local events into one digital experience.',
         highlights: [
-          'Developed React Native and TypeScript features from Figma designs into production-ready mobile UI.',
-          'Integrated Supabase and Sanity CMS for dynamic content, onboarding, and personalized checklist flows.',
-          'Built API and Resend workflows for user submissions and internal communication.',
-          'Contributed to a live product used by 170+ users across beta and launch.',
+          'Translated Figma product flows into responsive React Native and TypeScript mobile screens.',
+          'Connected Supabase, Sanity CMS, APIs, and Resend workflows for dynamic onboarding and checklist experiences.',
+          'Supported product iteration across mobile, content, and community features for a launched newcomer support app.',
         ],
+        facts: ['Digital settlement platform', 'Learn + checklist + community', 'In-person newcomer events'],
+        projectHash: 'unify',
         logo: unifyLogo,
         accent: 'warm',
         media: [
@@ -100,7 +100,7 @@ function App() {
             fallback: unifyLogo,
             alt: 'Unify Social mobile app screen',
             label: 'Mobile learning flow',
-            className: 'portrait-card',
+            className: 'portrait-card contain-card',
             fromX: -170,
             fromY: 70,
             rotate: -8,
@@ -123,7 +123,7 @@ function App() {
             src: '/experience/unify-group-social.jpg',
             fallback: unifyLogo,
             alt: 'Unify Social community group photo',
-            label: 'Community work',
+            label: 'Team Social',
             className: 'small-card',
             fromX: -110,
             fromY: 190,
@@ -136,7 +136,7 @@ function App() {
             fallback: unifyLogo,
             alt: 'Unify Social is live on the App Store',
             label: 'App Store launch',
-            className: 'wide-card lower-card',
+            className: 'wide-card lower-card contain-card',
             fromX: 130,
             fromY: 170,
             rotate: -5,
@@ -151,14 +151,16 @@ function App() {
         company: 'Subvision Robotics',
         role: 'Software Developer',
         location: 'Burnaby, BC',
+        headline: 'A subsea robotics company taking a prevention-first approach to hull maintenance.',
         summary:
-          'Designing autonomous navigation and coverage path planning tools for complex 3D ship hull environments.',
+          'Subvision is building ZIMA, a hull-climbing subsea rover designed to stop early-stage biofouling before it becomes drag, using repeatable maintenance passes, close-range UV-C treatment, and real-world hardware iteration.',
         highlights: [
-          'Designed a graph-based neural network approach for efficient surface coverage on STL-derived point cloud graphs.',
-          'Built Python, NumPy, and KDTree pipelines for spatial neighbor search and structured 3D graph generation.',
-          'Implemented obstacle detection with plane fitting and geometric distance analysis for non-traversable regions.',
-          'Created matplotlib simulations to validate coverage efficiency, repetition, and dead-zone recovery strategies.',
+          'Worked on autonomous coverage planning for complex 3D ship hull surfaces.',
+          'Built Python, NumPy, and KDTree pipelines that convert mesh data into point-cloud graph structures.',
+          'Created simulation and visualization tooling to study coverage efficiency, repeated traversal, and dead-zone recovery.',
         ],
+        facts: ['ZIMA subsea rover', 'Hull-climbing mobility', 'Coverage planning software'],
+        projectHash: 'subvision',
         logo: subvisionLogo,
         accent: 'cool',
         media: [
@@ -281,6 +283,7 @@ function App() {
       let nextRoute = 'home'
       if (window.location.pathname === '/about') nextRoute = 'about'
       if (window.location.pathname === '/projects') nextRoute = 'projects'
+      if (window.location.pathname === '/contact') nextRoute = 'contact'
       if (nextRoute !== 'home') scrollToPageTop()
 
       setRoute(nextRoute)
@@ -327,37 +330,24 @@ function App() {
       return clamp((window.scrollY - heroStart) / heroScrollable)
     }
 
-    const readStickyProgress = (id) => {
-      const node = document.getElementById(id)
-      if (!node) return 0
-      const rect = node.getBoundingClientRect()
-      const scrollable = Math.max(node.offsetHeight - window.innerHeight, 1)
-      return clamp(-rect.top / scrollable)
-    }
-
     const onScroll = () => {
       const hero = readHeroProgress()
       const intro = readProgress('about', 80)
       const work = readProgress('experience', 100)
       const stack = readProgress('stack', 120)
-      const contact = readProgress('contact', 120)
-      const experience = readStickyProgress('experience')
 
       setScrollProgress({
         hero,
-        experience,
       })
 
       if (intro > 0.2) setIntroVisible(true)
       if (work > 0.2) setWorkVisible(true)
       if (stack > 0.2) setStackVisible(true)
-      if (contact > 0.2) setContactVisible(true)
 
       if (hero < 0.42) {
         setIntroVisible(false)
         setWorkVisible(false)
         setStackVisible(false)
-        setContactVisible(false)
       }
     }
 
@@ -398,12 +388,32 @@ function App() {
   const navigateToProjects = (event) => {
     event.preventDefault()
 
-    if (window.location.pathname !== '/projects') {
+    if (window.location.pathname !== '/projects' || window.location.hash) {
       window.history.pushState({}, '', '/projects')
     }
 
     scrollToPageTop()
     setRoute('projects')
+    setPendingHash(null)
+  }
+
+  const navigateToProjectDetail = (hash) => (event) => {
+    event.preventDefault()
+    window.history.pushState({}, '', `/projects#${hash}`)
+    scrollToPageTop()
+    setRoute('projects')
+    setPendingHash(null)
+  }
+
+  const navigateToContact = (event) => {
+    event.preventDefault()
+
+    if (window.location.pathname !== '/contact') {
+      window.history.pushState({}, '', '/contact')
+    }
+
+    scrollToPageTop()
+    setRoute('contact')
     setPendingHash(null)
   }
 
@@ -417,52 +427,13 @@ function App() {
       ? 0
       : clamp((scrollProgress.hero - 0.48) / 0.1)
 
-  const assembledTitleProgress = phase(scrollProgress.experience, 0, 0.035)
-  const assembledTitleOpacity = assembledTitleProgress
-  const assembledTitleStyle = {
-    opacity: assembledTitleOpacity,
-    transform: `translate3d(0, ${(1 - assembledTitleProgress) * 34}px, 0)`,
-  }
-
-  const getPanelStyle = (start, end) => {
-    const enter = phase(scrollProgress.experience, start, start + 0.045)
-    const exit = end >= 1 ? 0 : phase(scrollProgress.experience, end - 0.035, end)
-    const opacity = enter * (1 - exit)
-
-    return {
-      opacity,
-      transform: `translate3d(0, ${(1 - enter) * 46 - exit * 70}px, 0)`,
-      pointerEvents: opacity > 0.12 ? 'auto' : 'none',
-    }
-  }
-
-  const getTextStyle = (start) => {
-    const enter = phase(scrollProgress.experience, start + 0.055, start + 0.095)
-
-    return {
-      opacity: enter,
-      transform: `translate3d(0, ${(1 - enter) * 24}px, 0)`,
-    }
-  }
-
-  const getMediaStyle = (panelStart, panelEnd, item) => {
-    const enter = phase(scrollProgress.experience, panelStart + item.delay, panelStart + item.delay + 0.06)
-    const exit = panelEnd >= 1 ? 0 : phase(scrollProgress.experience, panelEnd - 0.035, panelEnd)
-
-    return {
-      opacity: enter * (1 - exit),
-      transform: `translate3d(${(1 - enter) * item.fromX}px, ${(1 - enter) * item.fromY - exit * 90}px, 0) rotate(${(1 - enter) * item.rotate}deg) scale(${0.88 + enter * 0.12})`,
-      zIndex: item.zIndex,
-    }
-  }
-
   if (route === 'about') {
     return (
       <AboutPage
         onHome={navigateToHomeSection()}
         onAbout={navigateToAbout}
         onProjects={navigateToProjects}
-        onContact={navigateToHomeSection('#contact')}
+        onContact={navigateToContact}
       />
     )
   }
@@ -473,7 +444,18 @@ function App() {
         onHome={navigateToHomeSection()}
         onAbout={navigateToAbout}
         onProjects={navigateToProjects}
-        onContact={navigateToHomeSection('#contact')}
+        onContact={navigateToContact}
+      />
+    )
+  }
+
+  if (route === 'contact') {
+    return (
+      <ContactPage
+        onHome={navigateToHomeSection()}
+        onAbout={navigateToAbout}
+        onProjects={navigateToProjects}
+        onContact={navigateToContact}
       />
     )
   }
@@ -494,7 +476,7 @@ function App() {
               <a href="/" onClick={navigateToHomeSection()}>Home</a>
               <a href="/about" onClick={navigateToAbout}>About me</a>
               <a href="/projects" onClick={navigateToProjects}>Projects</a>
-              <a href="/#contact" onClick={navigateToHomeSection('#contact')}>Contact</a>
+              <a href="/contact" onClick={navigateToContact}>Contact</a>
             </nav>
           </header>
 
@@ -542,70 +524,99 @@ function App() {
           </section>
 
           <section id="experience" className={`experience-wrapper ${workVisible ? 'is-visible' : ''}`}>
-            <div className="experience-sticky">
-              <h2 className="experience-title-assembled" style={assembledTitleStyle}>
-                <span>Work</span>
-                <span>and</span>
-                <span>Volunteer</span>
-                <span>Experience</span>
-              </h2>
+            <div className="experience-inner">
+              <div className="experience-section-heading">
+                <p>Work & volunteer experience</p>
+                <h2>Building with people, products, and machines.</h2>
+              </div>
 
               <div className="experience-showcase">
                 {featuredExperiences.map((experience, index) => {
-                  const start = index === 0 ? 0.04 : 0.42
-                  const end = index === 0 ? 0.34 : 0.74
+                  const mainMediaIndex = experience.id === 'unify' ? 1 : 0
+                  const mainMedia = experience.media[mainMediaIndex]
+                  const supportingMedia = experience.media.filter((_, mediaIndex) => mediaIndex !== mainMediaIndex)
 
                   return (
                     <article
                       key={experience.id}
-                      className={`experience-panel experience-panel-${experience.accent}`}
-                      style={getPanelStyle(start, end)}
+                      className={`experience-panel experience-panel-${experience.accent} ${index % 2 ? 'experience-panel-reverse' : ''}`}
                     >
                       <div className="experience-media-cloud">
-                        {experience.media.map((item) => (
-                          <OptionalExperienceImage
-                            key={`${experience.id}-${item.label}`}
-                            src={item.src}
-                            fallback={item.fallback}
-                            alt={item.alt}
-                            label={item.label}
-                            className={item.className}
-                            style={getMediaStyle(start, end, item)}
-                          />
-                        ))}
+                        <OptionalExperienceImage
+                          src={mainMedia.src}
+                          fallback={mainMedia.fallback}
+                          alt={mainMedia.alt}
+                          label={mainMedia.label}
+                          className={`${mainMedia.className} experience-media-main`}
+                        />
+
+                        <div className="experience-media-strip">
+                          {supportingMedia.map((item) => (
+                            <OptionalExperienceImage
+                              key={`${experience.id}-${item.label}`}
+                              src={item.src}
+                              fallback={item.fallback}
+                              alt={item.alt}
+                              label={item.label}
+                              className={`${item.className} experience-media-thumb`}
+                            />
+                          ))}
+                        </div>
                       </div>
 
-                      <div className="experience-copy" style={getTextStyle(start)}>
-                        <p className="experience-period">{experience.period} / {experience.location}</p>
+                      <div className="experience-copy">
                         <div className="experience-company-row">
                           <img src={experience.logo} alt={`${experience.company} logo`} />
                           <div>
+                            <p className="experience-period">{experience.period} / {experience.location}</p>
                             <h3>{experience.company}</h3>
-                            <p>{experience.role}</p>
+                            <p className="experience-role">{experience.role}</p>
                           </div>
                         </div>
+                        <h4>{experience.headline}</h4>
                         <p className="experience-summary">{experience.summary}</p>
                         <ul className="experience-highlights">
                           {experience.highlights.map((highlight) => (
                             <li key={highlight}>{highlight}</li>
                           ))}
                         </ul>
+                        <div className="experience-facts">
+                          {experience.facts.map((fact) => (
+                            <span key={fact}>{fact}</span>
+                          ))}
+                        </div>
+                        <a
+                          className="experience-cta"
+                          href={`/projects#${experience.projectHash}`}
+                          onClick={navigateToProjectDetail(experience.projectHash)}
+                        >
+                          Learn more about what I did
+                          <span aria-hidden="true">-&gt;</span>
+                        </a>
                       </div>
                     </article>
                   )
                 })}
 
-                <article className="experience-panel volunteer-panel" style={getPanelStyle(0.78, 1)}>
-                  <div className="volunteer-grid" style={getTextStyle(0.78)}>
-                    {volunteerExperiences.map((experience) => (
-                      <div className="volunteer-card" key={experience.company}>
-                        <img src={experience.logo} alt={`${experience.company} logo`} />
-                        <p className="experience-period">{experience.period}</p>
-                        <h3>{experience.company}</h3>
-                        <h4>{experience.role}</h4>
-                        <p>{experience.description}</p>
-                      </div>
-                    ))}
+                <article className="volunteer-panel">
+                  <div className="volunteer-story">
+                    <div className="volunteer-intro">
+                      <p className="experience-period">Community-facing work</p>
+                      <h3>Helping others learn, feel supported, and move forward.</h3>
+                    </div>
+                    <div className="volunteer-grid">
+                      {volunteerExperiences.map((experience) => (
+                        <article className="volunteer-card" key={experience.company}>
+                          <img src={experience.logo} alt={`${experience.company} logo`} />
+                          <div>
+                            <p className="experience-period">{experience.period}</p>
+                            <h3>{experience.company}</h3>
+                            <h4>{experience.role}</h4>
+                          </div>
+                          <p>{experience.description}</p>
+                        </article>
+                      ))}
+                    </div>
                   </div>
                 </article>
               </div>
@@ -637,8 +648,6 @@ function App() {
               <span aria-hidden="true">&rarr;</span>
             </a>
           </section>
-
-          <ContactSection isVisible={contactVisible} />
         </div>
       </main>
 
@@ -656,7 +665,7 @@ function App() {
             <a href="/" onClick={navigateToHomeSection()}>Home</a>
             <a href="/about" onClick={navigateToAbout}>About me</a>
             <a href="/projects" onClick={navigateToProjects}>Projects</a>
-            <a href="/#contact" onClick={navigateToHomeSection('#contact')}>Contact</a>
+            <a href="/contact" onClick={navigateToContact}>Contact</a>
           </nav>
           <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
         </div>

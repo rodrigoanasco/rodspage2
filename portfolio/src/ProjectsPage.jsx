@@ -31,6 +31,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
   const projects = [
     {
       name: 'Unify',
+      slug: 'unify',
       type: 'Mobile product',
       year: '2025',
       summary:
@@ -52,6 +53,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
     },
     {
       name: 'Learnverse',
+      slug: 'learnverse',
       type: 'Award-winning education platform',
       year: '2025',
       summary:
@@ -71,6 +73,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
     },
     {
       name: 'PathPlanning GBNN',
+      slug: 'subvision',
       type: 'Robotics algorithm',
       year: '2025',
       summary:
@@ -85,6 +88,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
     },
     {
       name: 'bLeet',
+      slug: 'bleet',
       type: 'AI and 3D learning platform',
       year: '2026',
       summary:
@@ -100,6 +104,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
     },
     {
       name: 'Panoramizer',
+      slug: 'panoramizer',
       type: 'Computer vision',
       year: '2025',
       summary:
@@ -114,6 +119,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
     },
     {
       name: 'Hungry Doug',
+      slug: 'hungry-doug',
       type: 'Java game engine',
       year: '2024',
       summary:
@@ -142,6 +148,15 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
     )
 
     nodes.forEach((node) => observer.observe(node))
+
+    const hash = window.location.hash.slice(1)
+    if (hash) {
+      window.requestAnimationFrame(() => {
+        const target = document.getElementById(hash)
+        if (target) target.scrollIntoView({ block: 'start' })
+      })
+    }
+
     return () => observer.disconnect()
   }, [])
 
@@ -153,7 +168,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
           <a href="/" onClick={onHome}>Home</a>
           <a href="/about" onClick={onAbout}>About me</a>
           <a className="is-active" href="/projects" onClick={onProjects}>Projects</a>
-          <a href="/#contact" onClick={onContact}>Contact</a>
+          <a href="/contact" onClick={onContact}>Contact</a>
         </nav>
       </header>
 
@@ -182,7 +197,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
 
         <section className="projects-list" aria-label="Project case studies">
           {projects.map((project, index) => (
-            <article className={`project-case projects-reveal ${project.cardVariant ? `project-case--${project.cardVariant}` : ''}`} key={project.name}>
+            <article id={project.slug} className={`project-case projects-reveal ${project.cardVariant ? `project-case--${project.cardVariant}` : ''}`} key={project.name}>
               <div className="project-copy">
                 <div className="project-meta">
                   <span>{project.type}</span>
@@ -274,7 +289,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact }) {
             <a href="/" onClick={onHome}>Home</a>
             <a href="/about" onClick={onAbout}>About me</a>
             <a href="/projects" onClick={onProjects}>Projects</a>
-            <a href="/#contact" onClick={onContact}>Contact</a>
+            <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
           <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
         </div>
