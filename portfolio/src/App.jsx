@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import AboutPage from './AboutPage'
+import ContactSection from './ContactSection'
+import ProjectsPage from './ProjectsPage'
 import landingImage from './assets/images/landing_page_image.png'
 import unifyLogo from './assets/images/Experience/unify_logo.png'
 import subvisionLogo from './assets/images/Experience/subvision_logo.png'
@@ -59,11 +61,16 @@ function OptionalExperienceImage({ src, fallback, alt, label, className = '', st
 }
 
 function App() {
-  const [route, setRoute] = useState(() => (window.location.pathname === '/about' ? 'about' : 'home'))
+  const [route, setRoute] = useState(() => {
+    if (window.location.pathname === '/about') return 'about'
+    if (window.location.pathname === '/projects') return 'projects'
+    return 'home'
+  })
   const [pendingHash, setPendingHash] = useState(null)
   const [introVisible, setIntroVisible] = useState(false)
   const [workVisible, setWorkVisible] = useState(false)
   const [stackVisible, setStackVisible] = useState(false)
+  const [contactVisible, setContactVisible] = useState(false)
   const [scrollProgress, setScrollProgress] = useState({
     hero: 0,
     experience: 0,
@@ -271,8 +278,10 @@ function App() {
 
   useEffect(() => {
     const onPopState = () => {
-      const nextRoute = window.location.pathname === '/about' ? 'about' : 'home'
-      if (nextRoute === 'about') scrollToPageTop()
+      let nextRoute = 'home'
+      if (window.location.pathname === '/about') nextRoute = 'about'
+      if (window.location.pathname === '/projects') nextRoute = 'projects'
+      if (nextRoute !== 'home') scrollToPageTop()
 
       setRoute(nextRoute)
       setPendingHash({ hash: window.location.hash })
@@ -331,6 +340,7 @@ function App() {
       const intro = readProgress('about', 80)
       const work = readProgress('experience', 100)
       const stack = readProgress('stack', 120)
+      const contact = readProgress('contact', 120)
       const experience = readStickyProgress('experience')
 
       setScrollProgress({
@@ -341,11 +351,13 @@ function App() {
       if (intro > 0.2) setIntroVisible(true)
       if (work > 0.2) setWorkVisible(true)
       if (stack > 0.2) setStackVisible(true)
+      if (contact > 0.2) setContactVisible(true)
 
       if (hero < 0.42) {
         setIntroVisible(false)
         setWorkVisible(false)
         setStackVisible(false)
+        setContactVisible(false)
       }
     }
 
@@ -380,6 +392,18 @@ function App() {
 
     scrollToPageTop()
     setRoute('about')
+    setPendingHash(null)
+  }
+
+  const navigateToProjects = (event) => {
+    event.preventDefault()
+
+    if (window.location.pathname !== '/projects') {
+      window.history.pushState({}, '', '/projects')
+    }
+
+    scrollToPageTop()
+    setRoute('projects')
     setPendingHash(null)
   }
 
@@ -437,7 +461,18 @@ function App() {
       <AboutPage
         onHome={navigateToHomeSection()}
         onAbout={navigateToAbout}
-        onProjects={navigateToHomeSection('#projects')}
+        onProjects={navigateToProjects}
+        onContact={navigateToHomeSection('#contact')}
+      />
+    )
+  }
+
+  if (route === 'projects') {
+    return (
+      <ProjectsPage
+        onHome={navigateToHomeSection()}
+        onAbout={navigateToAbout}
+        onProjects={navigateToProjects}
         onContact={navigateToHomeSection('#contact')}
       />
     )
@@ -458,7 +493,7 @@ function App() {
             <nav>
               <a href="/" onClick={navigateToHomeSection()}>Home</a>
               <a href="/about" onClick={navigateToAbout}>About me</a>
-              <a href="/#projects" onClick={navigateToHomeSection('#projects')}>Projects</a>
+              <a href="/projects" onClick={navigateToProjects}>Projects</a>
               <a href="/#contact" onClick={navigateToHomeSection('#contact')}>Contact</a>
             </nav>
           </header>
@@ -597,15 +632,17 @@ function App() {
                 ))}
               </div>
             </div>
-            <div className="stack-projects-teaser">
+            <a className="stack-projects-teaser" href="/projects" onClick={navigateToProjects}>
               <span>Come see my projects</span>
               <span aria-hidden="true">&rarr;</span>
-            </div>
+            </a>
           </section>
+
+          <ContactSection isVisible={contactVisible} />
         </div>
       </main>
 
-      <footer id="contact">
+      <footer>
         <div className="footer-inner">
           <div className="footer-socials">
             <a href="https://www.instagram.com/rodr_1201/" target="_blank" rel="noreferrer">
@@ -618,7 +655,7 @@ function App() {
           <nav className="footer-nav" aria-label="Footer navigation">
             <a href="/" onClick={navigateToHomeSection()}>Home</a>
             <a href="/about" onClick={navigateToAbout}>About me</a>
-            <a href="/#projects" onClick={navigateToHomeSection('#projects')}>Projects</a>
+            <a href="/projects" onClick={navigateToProjects}>Projects</a>
             <a href="/#contact" onClick={navigateToHomeSection('#contact')}>Contact</a>
           </nav>
           <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>

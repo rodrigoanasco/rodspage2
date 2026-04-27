@@ -73,7 +73,7 @@ function AboutPage({ onHome, onAbout, onProjects, onContact }) {
         <nav>
           <a href="/" onClick={onHome}>Home</a>
           <a className="is-active" href="/about" onClick={onAbout}>About me</a>
-          <a href="/#projects" onClick={onProjects}>Projects</a>
+          <a href="/projects" onClick={onProjects}>Projects</a>
           <a href="/#contact" onClick={onContact}>Contact</a>
         </nav>
       </header>
@@ -197,7 +197,7 @@ function AboutPage({ onHome, onAbout, onProjects, onContact }) {
           <nav className="footer-nav" aria-label="Footer navigation">
             <a href="/" onClick={onHome}>Home</a>
             <a href="/about" onClick={onAbout}>About me</a>
-            <a href="/#projects" onClick={onProjects}>Projects</a>
+            <a href="/projects" onClick={onProjects}>Projects</a>
             <a href="/#contact" onClick={onContact}>Contact</a>
           </nav>
           <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
