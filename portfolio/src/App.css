@@ -216,21 +216,23 @@
   display: flex;
   align-items: stretch;
   gap: 14px;
+  width: min(calc(100vw - 72px), 1774px);
 }
 
 .rectangle {
   position: relative;
   background-color: rgba(10, 10, 10, 0.67);
-  height: 300px;
+  height: clamp(150px, 15vw, 300px);
+  overflow: hidden;
 }
 
 .rectangle-1 {
-  width: 900px;
+  flex: 900 1 0;
   padding: 0;
 }
 
 .rectangle-2 {
-  width: 860px;
+  flex: 860 1 0;
   padding: 0;
 }
 
@@ -255,10 +257,10 @@
 .anasco {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  font-size: 240px;
+  font-size: clamp(6rem, 11.8vw, 240px);
   font-weight: 700;
   line-height: 0.9;
-  letter-spacing: -10px;
+  letter-spacing: 0;
   text-shadow: none;
   color: #ffffff;
   opacity: 0.9;
@@ -270,9 +272,9 @@
   margin: 2px 0 0;
   padding-left: 2px;
   font-family: 'Inter', sans-serif;
-  font-size: 26px;
+  font-size: clamp(16px, 1.25vw, 26px);
   font-weight: 700;
-  letter-spacing: -0.6px;
+  letter-spacing: 0;
   color: #ffffff;
   opacity: 1;
   text-align: left;
@@ -1287,12 +1289,13 @@ footer p {
   .rectangle-1,
   .rectangle-2 {
     width: 100%;
+    flex: none;
   }
 
   .rodrigo,
   .anasco {
-    letter-spacing: -4px;
-    font-size: 150px;
+    letter-spacing: 0;
+    font-size: clamp(6.25rem, 17vw, 150px);
   }
 
   .hero-email {
@@ -1300,6 +1303,7 @@ footer p {
   }
 
   .rectangle {
+    height: clamp(180px, 28vw, 260px);
     overflow: hidden;
   }
 
