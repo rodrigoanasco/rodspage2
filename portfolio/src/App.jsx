@@ -220,7 +220,7 @@ function App() {
   const volunteerExperiences = useMemo(
     () => [
       {
-        period: 'Mar 2024 - Present',
+        period: 'Mar 2026 - Present',
         company: 'York Region Educational Services',
         role: 'Data Analytics & Web Design',
         description:
@@ -228,7 +228,7 @@ function App() {
         logo: yresLogo,
       },
       {
-        period: 'Aug 2023 - Apr 2026',
+        period: 'Aug 2023 - Apr 2024',
         company: 'Fraser International College',
         role: 'Peer Educator',
         description:
