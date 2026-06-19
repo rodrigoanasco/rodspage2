@@ -76,7 +76,9 @@ function App() {
     if (window.location.pathname === '/contact') return 'contact'
     return 'home'
   })
-  const [pendingHash, setPendingHash] = useState(null)
+  const [pendingHash, setPendingHash] = useState(() =>
+    (window.location.hash ? { hash: window.location.hash, behavior: 'auto' } : null),
+  )
   const [theme, setTheme] = useState(getInitialTheme)
   const [introVisible, setIntroVisible] = useState(false)
   const [workVisible, setWorkVisible] = useState(false)
@@ -239,6 +241,48 @@ function App() {
     [],
   )
 
+  const certificateItems = useMemo(
+    () => [
+      {
+        title: 'Impact Leadership',
+        issuer: 'York Region Educational Services',
+        date: '2026',
+        image: '/certificates/impact_certificate_YRES.png',
+        href: '/certificates/impact_certificate_YRES.png',
+        description:
+          'Completed a 12-workshop leadership course focused on transferable skills, job readiness, and academic performance.',
+      },
+      {
+        title: 'Foundations: Data, Data, Everywhere',
+        issuer: 'Google / Coursera',
+        date: 'May 2026',
+        image: '/certificates/coursera-data-everywhere-preview.png',
+        href: '/certificates/Coursera%20Data%20Data%20Everywhere.pdf',
+        description:
+          'Built data analytics foundations across the data life cycle, analytical thinking, and using data to support decisions.',
+      },
+      {
+        title: 'Ask Questions to Make Data-Driven Decisions',
+        issuer: 'Google / Coursera',
+        date: 'Jun 2026',
+        image: '/certificates/coursera-ask-questions-preview.png',
+        href: '/certificates/Coursera%20Ask%20Questions%20to%20make%20data%20driven%20decisions.pdf',
+        description:
+          'Practiced framing business questions, defining useful metrics, and preparing analysis around clear stakeholder needs.',
+      },
+      {
+        title: 'Worker Health and Safety Awareness in 4 Steps',
+        issuer: 'Ontario Ministry of Labour, Training and Skills Development',
+        date: 'Mar 2026',
+        image: '/certificates/certificate_of_completion_4steps.png',
+        href: '/certificates/certificate_of_completion_4steps.png',
+        description:
+          'Completed Ontario workplace safety training covering worker rights, responsibilities, and hazard awareness.',
+      },
+    ],
+    [],
+  )
+
   const techStack = useMemo(
     () => [
       cLogo,
@@ -308,7 +352,7 @@ function App() {
       if (nextRoute !== 'home') scrollToPageTop()
 
       setRoute(nextRoute)
-      setPendingHash({ hash: window.location.hash })
+      setPendingHash({ hash: window.location.hash, behavior: 'auto' })
     }
 
     window.addEventListener('popstate', onPopState)
@@ -322,13 +366,24 @@ function App() {
     const hash = pendingHash.hash
 
     if (!hash) {
-      scrollToPageTop('smooth')
+      scrollToPageTop(pendingHash.behavior ?? 'smooth')
       return
     }
 
     window.requestAnimationFrame(() => {
       const target = document.querySelector(hash)
-      if (target) target.scrollIntoView({ behavior: 'smooth' })
+      if (!target) return
+
+      const behavior = pendingHash.behavior ?? 'smooth'
+      if (behavior === 'auto') {
+        const previousScrollBehavior = document.documentElement.style.scrollBehavior
+        document.documentElement.style.scrollBehavior = 'auto'
+        target.scrollIntoView()
+        document.documentElement.style.scrollBehavior = previousScrollBehavior
+        return
+      }
+
+      target.scrollIntoView({ behavior })
     })
   }, [pendingHash, route])
 
@@ -391,7 +446,7 @@ function App() {
 
     if (!hash) scrollToPageTop()
     setRoute('home')
-    setPendingHash({ hash })
+    setPendingHash({ hash, behavior: 'smooth' })
   }
 
   const navigateToAbout = (event) => {
@@ -639,6 +694,13 @@ function App() {
                     <div className="volunteer-intro">
                       <p className="experience-period">Community-facing work</p>
                       <h3>Helping others learn, feel supported, and move forward.</h3>
+                      <p className="volunteer-intro-copy">
+                        A few certificates connected to that same mix of community work, data learning, leadership, and workplace readiness.
+                      </p>
+                      <a className="certificates-jump" href="#certificates">
+                        Look at my certificates
+                        <span aria-hidden="true">-&gt;</span>
+                      </a>
                     </div>
                     <div className="volunteer-grid">
                       {volunteerExperiences.map((experience) => (
@@ -654,6 +716,41 @@ function App() {
                       ))}
                     </div>
                   </div>
+
+                  <section id="certificates" className="certificates-section" aria-labelledby="certificates-heading">
+                    <div className="certificates-header">
+                      <div>
+                        <p className="experience-period">Certificates</p>
+                        <h3 id="certificates-heading">Recent proof of practice.</h3>
+                      </div>
+                      <p>
+                        Small wins that show the learning behind the work: data analytics, leadership, and practical workplace preparation.
+                      </p>
+                    </div>
+
+                    <div className="certificate-gallery">
+                      {certificateItems.map((certificate) => (
+                        <a
+                          className="certificate-card"
+                          href={certificate.href}
+                          target="_blank"
+                          rel="noreferrer"
+                          key={certificate.title}
+                          aria-label={`Open ${certificate.title} certificate`}
+                        >
+                          <figure className="certificate-preview">
+                            <img src={certificate.image} alt={`${certificate.title} certificate`} loading="lazy" decoding="async" />
+                          </figure>
+                          <div className="certificate-card-body">
+                            <p className="certificate-meta">{certificate.issuer} / {certificate.date}</p>
+                            <h4>{certificate.title}</h4>
+                            <p>{certificate.description}</p>
+                            <span className="certificate-link-label">Open certificate -&gt;</span>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </section>
                 </article>
               </div>
             </div>
