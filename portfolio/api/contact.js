@@ -87,7 +87,11 @@ export default async function handler(request, response) {
       }),
     })
 
-    if (!emailResponse.ok) throw new Error(`EmailJS returned ${emailResponse.status}`)
+    if (!emailResponse.ok) {
+      const emailError = await emailResponse.text()
+      console.error(`EmailJS returned ${emailResponse.status}: ${emailError}`)
+      throw new Error(`EmailJS returned ${emailResponse.status}`)
+    }
     return sendJson(response, 200, { ok: true })
   } catch (error) {
     console.error('Contact form delivery failed:', error)
