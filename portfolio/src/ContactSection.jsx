@@ -1,24 +1,19 @@
-import { useState } from 'react'
-import emailjs from '@emailjs/browser'
+import { useRef, useState } from 'react'
+import { Turnstile } from '@marsidev/react-turnstile'
 
 const initialForm = {
   name: '',
   email: '',
   message: '',
-}
-
-const emailConfig = {
-  serviceId: 'service_km52in2',
-  templateId: 'template_lif4lqp',
-  publicKey: 'cbqICtdLPho06yW9w',
-  toName: 'Rodrigo',
-  toEmail: 'ro.anasco.s@gmail.com',
+  website: '',
 }
 
 function ContactSection({ isVisible }) {
   const [form, setForm] = useState(initialForm)
+  const [turnstileToken, setTurnstileToken] = useState('')
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState(null)
+  const turnstileRef = useRef(null)
 
   const handleChange = ({ target }) => {
     setForm((currentForm) => ({
@@ -31,28 +26,33 @@ function ContactSection({ isVisible }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+
+    if (!turnstileToken) {
+      setStatus({ type: 'error', message: 'Please complete the anti-spam check.' })
+      return
+    }
+
     setLoading(true)
     setStatus(null)
 
     try {
-      await emailjs.send(
-        emailConfig.serviceId,
-        emailConfig.templateId,
-        {
-          from_name: form.name,
-          to_name: emailConfig.toName,
-          from_email: form.email,
-          to_email: emailConfig.toEmail,
-          message: form.message,
-        },
-        emailConfig.publicKey,
-      )
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, turnstileToken }),
+      })
+      const result = await response.json().catch(() => ({}))
+
+      if (!response.ok) throw new Error(result.message || 'Unable to send your message.')
 
       setForm(initialForm)
+      setTurnstileToken('')
+      turnstileRef.current?.reset()
       setStatus({ type: 'success', message: 'Message sent. I will get back to you soon.' })
     } catch (error) {
-      console.error(error)
-      setStatus({ type: 'error', message: 'Something went wrong. You can still email me directly.' })
+      setStatus({ type: 'error', message: error.message || 'Something went wrong. You can still email me directly.' })
+      setTurnstileToken('')
+      turnstileRef.current?.reset()
     } finally {
       setLoading(false)
     }
@@ -83,52 +83,39 @@ function ContactSection({ isVisible }) {
           <div className="contact-form-body">
             <label>
               <span>Full name</span>
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Your name"
-                autoComplete="name"
-                required
-              />
+              <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Your name" autoComplete="name" minLength="2" maxLength="100" required />
             </label>
 
             <label>
               <span>Email</span>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="your.email@example.com"
-                autoComplete="email"
-                required
-              />
+              <input type="email" name="email" value={form.email} onChange={handleChange} placeholder="your.email@example.com" autoComplete="email" maxLength="254" required />
             </label>
 
             <label>
               <span>Message</span>
-              <textarea
-                name="message"
-                value={form.message}
-                onChange={handleChange}
-                placeholder="Hi Rodrigo, I wanted to reach out about..."
-                rows="5"
-                required
-              />
+              <textarea name="message" value={form.message} onChange={handleChange} placeholder="Hi Rodrigo, I wanted to reach out about..." rows="5" minLength="10" maxLength="5000" required />
             </label>
 
-            <button type="submit" disabled={loading}>
+            <label className="contact-honeypot" aria-hidden="true">
+              <span>Website</span>
+              <input name="website" value={form.website} onChange={handleChange} tabIndex="-1" autoComplete="off" />
+            </label>
+
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+              onSuccess={setTurnstileToken}
+              onExpire={() => setTurnstileToken('')}
+              onError={() => setTurnstileToken('')}
+              options={{ action: 'contact', theme: 'auto', size: 'flexible' }}
+            />
+
+            <button type="submit" disabled={loading || !turnstileToken}>
               {loading ? 'Sending...' : 'Send message'}
               <span aria-hidden="true">-&gt;</span>
             </button>
 
-            {status && (
-              <p className={`contact-status contact-status--${status.type}`} role="status">
-                {status.message}
-              </p>
-            )}
+            {status && <p className={`contact-status contact-status--${status.type}`} role="status">{status.message}</p>}
           </div>
         </form>
       </div>

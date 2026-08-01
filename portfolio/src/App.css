@@ -1296,6 +1296,16 @@
   opacity: 0.72;
 }
 
+.contact-honeypot {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .contact-status {
   min-height: 24px;
   margin: 0;
