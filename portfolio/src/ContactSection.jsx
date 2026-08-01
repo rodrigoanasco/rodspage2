@@ -14,6 +14,7 @@ function ContactSection({ isVisible }) {
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState(null)
   const turnstileRef = useRef(null)
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
 
   const handleChange = ({ target }) => {
     setForm((currentForm) => ({
@@ -101,16 +102,28 @@ function ContactSection({ isVisible }) {
               <input name="website" value={form.website} onChange={handleChange} tabIndex="-1" autoComplete="off" />
             </label>
 
-            <Turnstile
-              ref={turnstileRef}
-              siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
-              onSuccess={setTurnstileToken}
-              onExpire={() => setTurnstileToken('')}
-              onError={() => setTurnstileToken('')}
-              options={{ action: 'contact', theme: 'auto', size: 'flexible' }}
-            />
+            {turnstileSiteKey ? (
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={turnstileSiteKey}
+                onSuccess={(token) => {
+                  setTurnstileToken(token)
+                  setStatus(null)
+                }}
+                onExpire={() => setTurnstileToken('')}
+                onError={() => {
+                  setTurnstileToken('')
+                  setStatus({ type: 'error', message: 'The anti-spam check could not load. Please refresh and try again.' })
+                }}
+                options={{ action: 'contact', theme: 'auto', size: 'flexible' }}
+              />
+            ) : (
+              <p className="contact-status contact-status--error" role="status">
+                The contact form is not configured yet.
+              </p>
+            )}
 
-            <button type="submit" disabled={loading || !turnstileToken}>
+            <button type="submit" disabled={loading}>
               {loading ? 'Sending...' : 'Send message'}
               <span aria-hidden="true">-&gt;</span>
             </button>
