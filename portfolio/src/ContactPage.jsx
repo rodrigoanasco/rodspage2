@@ -5,7 +5,7 @@ import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
 import ThemeToggle from './ThemeToggle'
 import './ContactPage.css'
 
-function ContactPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggle }) {
+function ContactPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThemeToggle }) {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -19,6 +19,7 @@ function ContactPage({ onHome, onAbout, onProjects, onContact, theme, onThemeTog
             <a href="/" onClick={onHome}>Home</a>
             <a href="/about" onClick={onAbout}>About me</a>
             <a href="/projects" onClick={onProjects}>Projects</a>
+            <a href="/blog" onClick={onBlog}>Blog</a>
             <a className="is-active" href="/contact" onClick={onContact}>Contact</a>
           </nav>
           <ThemeToggle theme={theme} onToggle={onThemeToggle} />
@@ -43,6 +44,7 @@ function ContactPage({ onHome, onAbout, onProjects, onContact, theme, onThemeTog
             <a href="/" onClick={onHome}>Home</a>
             <a href="/about" onClick={onAbout}>About me</a>
             <a href="/projects" onClick={onProjects}>Projects</a>
+            <a href="/blog" onClick={onBlog}>Blog</a>
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
           <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>

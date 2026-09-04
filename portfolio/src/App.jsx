@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import AboutPage from './AboutPage'
 import ContactPage from './ContactPage'
 import ProjectsPage from './ProjectsPage'
@@ -43,6 +43,8 @@ import pytorchLogo from './assets/images/tech_stack/pytorch-original.svg'
 import matplotlibLogo from './assets/images/tech_stack/matplotlib-original.svg'
 import './App.css'
 
+const BlogPage = lazy(() => import('./BlogPage'))
+
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 const scrollToPageTop = (behavior = 'auto') => {
   window.scrollTo({ top: 0, left: 0, behavior })
@@ -73,6 +75,7 @@ function App() {
   const [route, setRoute] = useState(() => {
     if (window.location.pathname === '/about') return 'about'
     if (window.location.pathname === '/projects') return 'projects'
+    if (window.location.pathname === '/blog') return 'blog'
     if (window.location.pathname === '/contact') return 'contact'
     return 'home'
   })
@@ -348,6 +351,7 @@ function App() {
       let nextRoute = 'home'
       if (window.location.pathname === '/about') nextRoute = 'about'
       if (window.location.pathname === '/projects') nextRoute = 'projects'
+      if (window.location.pathname === '/blog') nextRoute = 'blog'
       if (window.location.pathname === '/contact') nextRoute = 'contact'
       if (nextRoute !== 'home') scrollToPageTop()
 
@@ -493,6 +497,18 @@ function App() {
     setPendingHash(null)
   }
 
+  const navigateToBlog = (event) => {
+    event.preventDefault()
+
+    if (window.location.pathname !== '/blog') {
+      window.history.pushState({}, '', '/blog')
+    }
+
+    scrollToPageTop()
+    setRoute('blog')
+    setPendingHash(null)
+  }
+
   const toggleTheme = () => {
     setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'))
   }
@@ -513,6 +529,7 @@ function App() {
         onHome={navigateToHomeSection()}
         onAbout={navigateToAbout}
         onProjects={navigateToProjects}
+        onBlog={navigateToBlog}
         onContact={navigateToContact}
         theme={theme}
         onThemeToggle={toggleTheme}
@@ -526,6 +543,7 @@ function App() {
         onHome={navigateToHomeSection()}
         onAbout={navigateToAbout}
         onProjects={navigateToProjects}
+        onBlog={navigateToBlog}
         onContact={navigateToContact}
         theme={theme}
         onThemeToggle={toggleTheme}
@@ -539,10 +557,27 @@ function App() {
         onHome={navigateToHomeSection()}
         onAbout={navigateToAbout}
         onProjects={navigateToProjects}
+        onBlog={navigateToBlog}
         onContact={navigateToContact}
         theme={theme}
         onThemeToggle={toggleTheme}
       />
+    )
+  }
+
+  if (route === 'blog') {
+    return (
+      <Suspense fallback={<div className="route-loading">Loading blog...</div>}>
+        <BlogPage
+          onHome={navigateToHomeSection()}
+          onAbout={navigateToAbout}
+          onProjects={navigateToProjects}
+          onBlog={navigateToBlog}
+          onContact={navigateToContact}
+          theme={theme}
+          onThemeToggle={toggleTheme}
+        />
+      </Suspense>
     )
   }
 
@@ -565,6 +600,7 @@ function App() {
                 <a href="/" onClick={navigateToHomeSection()}>Home</a>
                 <a href="/about" onClick={navigateToAbout}>About me</a>
                 <a href="/projects" onClick={navigateToProjects}>Projects</a>
+                <a href="/blog" onClick={navigateToBlog}>Blog</a>
                 <a href="/contact" onClick={navigateToContact}>Contact</a>
               </nav>
               <ThemeToggle theme={theme} onToggle={toggleTheme} />
@@ -798,6 +834,7 @@ function App() {
             <a href="/" onClick={navigateToHomeSection()}>Home</a>
             <a href="/about" onClick={navigateToAbout}>About me</a>
             <a href="/projects" onClick={navigateToProjects}>Projects</a>
+            <a href="/blog" onClick={navigateToBlog}>Blog</a>
             <a href="/contact" onClick={navigateToContact}>Contact</a>
           </nav>
           <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>

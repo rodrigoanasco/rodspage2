@@ -61,7 +61,7 @@ function ProjectVideo({ src, title, variant = 'wide' }) {
   )
 }
 
-function ProjectsPage({ onHome, onAbout, onProjects, onContact, theme, onThemeToggle }) {
+function ProjectsPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThemeToggle }) {
   const projects = [
     {
       name: 'Unify',
@@ -203,6 +203,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact, theme, onThemeTo
             <a href="/" onClick={onHome}>Home</a>
             <a href="/about" onClick={onAbout}>About me</a>
             <a className="is-active" href="/projects" onClick={onProjects}>Projects</a>
+            <a href="/blog" onClick={onBlog}>Blog</a>
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
           <ThemeToggle theme={theme} onToggle={onThemeToggle} />
@@ -326,6 +327,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onContact, theme, onThemeTo
             <a href="/" onClick={onHome}>Home</a>
             <a href="/about" onClick={onAbout}>About me</a>
             <a href="/projects" onClick={onProjects}>Projects</a>
+            <a href="/blog" onClick={onBlog}>Blog</a>
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
           <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>

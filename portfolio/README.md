@@ -1,5 +1,27 @@
 # React + Vite
 
+## Blog manager authentication setup
+
+The `/blog` page is public, but its manager workspace uses Clerk. The browser gets a short-lived Clerk session token and sends it to `/api/blog/session`; that serverless function verifies the token signature, fetches the user from Clerk, requires a verified primary email matching `BLOG_MANAGER_EMAIL`, and requires MFA by default. Future create, edit, upload, and moderation endpoints must call the same server-side authorization logic rather than trusting the UI.
+
+1. Create a **React** application in Clerk and copy its publishable key, secret key, and PEM JWT public key.
+2. In Clerk's **Access mode** settings, use invite-only access and invite only the manager email. If using the Allowlist feature instead, enable it and add only the manager email.
+3. In **User & authentication**, require email verification and disable user email changes.
+4. In **Multi-factor**, enable an authenticator app or passkeys, enable backup codes, and require MFA. The API also rejects a manager account that does not have two-factor authentication enabled unless `BLOG_REQUIRE_MFA=false` is explicitly set.
+5. Copy `.env.example` to `.env.local`, replace all placeholder values, and set `BLOG_AUTHORIZED_ORIGINS` to the exact origins that may issue sessions. Typical local values are `http://localhost:5173` for Vite and `http://localhost:3000` for `vercel dev`.
+6. Add the same values in the Vercel project's Environment Variables settings. Do not expose `CLERK_SECRET_KEY`, `CLERK_JWT_KEY`, or `BLOG_MANAGER_EMAIL` with a `VITE_` prefix.
+7. Redeploy, sign in at `/blog`, and confirm that the page shows **You are securely signed in**. A different Clerk account must receive **This is not the manager account**.
+
+The app deliberately fails closed when configuration is missing. In that case, the Blog page shows a setup notice and the API returns `503` without granting access.
+
+### Blog phases
+
+1. **Secure access (implemented):** Blog route, manager sign-in, signed sessions, verified-email authorization, and MFA enforcement.
+2. **Publishing:** Persistent post storage plus manager-only create, edit, preview, publish, and delete actions.
+3. **Media and conversation:** Video embeds/uploads, visitor comments, moderation, Turnstile, and distributed rate limits.
+
+Cloudflare is useful as an additional layer later: proxy the production domain, use Full (strict) TLS, and add WAF/rate-limit rules for Blog APIs. Turnstile is appropriate when visitor comments are added. It is bot protection, not a replacement for identity or server-side authorization.
+
 ## Secure contact form setup
 
 The contact form sends through the server-side `/api/contact` function and requires a Vercel deployment (or another host that supports Vercel-compatible functions).

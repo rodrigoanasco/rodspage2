@@ -11,12 +11,14 @@ The app is a React single page application powered by Vite. It uses lightweight 
 - **Custom CSS** split by page through files such as `App.css`, `AboutPage.css`, and `ProjectsPage.css`.
 - **EmailJS** through `@emailjs/browser` for the contact form.
 - **ESLint 9** for code quality checks.
+- **Clerk** for Blog-only identity sessions with server-side manager authorization.
 - **Vercel** for deployment.
 
 ## Main Features
 
 - Responsive landing page with animated hero, intro, experience, and tech stack sections.
 - Dedicated pages for About, Projects, and Contact.
+- A Blog foundation with a public landing page and manager-only authentication workspace.
 - Dark/light mode toggle shared across pages.
 - Project case studies with images, videos, tags, and report download links.
 - Lazy-loaded videos and images to improve deployed page performance.
@@ -44,6 +46,8 @@ rodspage2/
         |-- ProjectsPage.css
         |-- ContactPage.jsx
         |-- ContactPage.css
+        |-- BlogPage.jsx
+        |-- BlogPage.css
         |-- ContactSection.jsx
         |-- ThemeToggle.jsx
         |-- main.jsx
@@ -66,6 +70,8 @@ rodspage2/
 - `portfolio/src/AboutPage.jsx`: About page content, personal gallery, values, and hobbies.
 - `portfolio/src/ProjectsPage.jsx`: Project list, lazy-loaded project videos, case study cards, and stock report download.
 - `portfolio/src/ContactPage.jsx`: Contact page wrapper and page footer.
+- `portfolio/src/BlogPage.jsx`: Public Blog landing page and manager-only Clerk session UI.
+- `portfolio/api/blog/session.js`: Server-side token, verified-email, and MFA authorization check.
 - `portfolio/src/ContactSection.jsx`: Contact form and EmailJS submission logic.
 - `portfolio/src/App.css`: Global theme variables, shared nav/footer styles, home page sections, contact form styles, and responsive rules.
 

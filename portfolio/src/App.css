@@ -3,6 +3,15 @@
   background: #000;
 }
 
+.route-loading {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  color: var(--text-main);
+  background: var(--page-gradient);
+  font-family: 'Inter', sans-serif;
+}
+
 :root {
   color-scheme: dark;
   --background: #080b0f;
@@ -162,7 +171,7 @@
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
-.top-nav:not(.about-top-nav):not(.projects-top-nav):not(.contact-top-nav) .theme-toggle {
+.top-nav:not(.about-top-nav):not(.projects-top-nav):not(.blog-top-nav):not(.contact-top-nav) .theme-toggle {
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.28);
   background: rgba(10, 10, 10, 0.38);
@@ -1773,7 +1782,7 @@ footer p {
   .top-nav nav {
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 6px;
   }
 
