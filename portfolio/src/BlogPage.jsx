@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react'
-import { ClerkProvider, SignIn, UserButton, useAuth, useClerk } from '@clerk/react'
+import { useEffect, useRef, useState } from 'react'
+import { ClerkProvider, SignIn, UserProfile, useAuth } from '@clerk/react'
+import BlogEditor from './BlogEditor'
+import BlogPosts from './BlogPosts'
 import instagramLogo from './assets/images/tech_stack/instagram 1.png'
 import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
 import ThemeToggle from './ThemeToggle'
@@ -56,9 +58,9 @@ const requestManagerSession = async (getToken, signal) => {
   }
 }
 
-function ManagerSession() {
+function ManagerSession({ onDirtyChange, onPublished, dirty, busy }) {
   const { getToken, isLoaded, isSignedIn, signOut, userId } = useAuth()
-  const { openUserProfile } = useClerk()
+  const [settings, setSettings] = useState(false)
   const [verificationAttempt, setVerificationAttempt] = useState(0)
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
@@ -95,6 +97,23 @@ function ManagerSession() {
     setVerificationAttempt((attempt) => attempt + 1)
   }
 
+  const openSettings = () => {
+    if (dirty && !window.confirm('Discard unsaved editor changes to open account settings?')) return
+    setSettings(true)
+  }
+
+  const leaveAccount = () => {
+    if (dirty && !window.confirm('Discard unsaved editor changes and sign out?')) return
+    signOut({ redirectUrl: '/blog' })
+  }
+
+  if (isLoaded && isSignedIn && settings) {
+    return <div className="blog-account-settings">
+      <button className="blog-button" onClick={() => { setSettings(false); retryVerification() }}>Back to author workspace</button>
+      <UserProfile routing="virtual" />
+    </div>
+  }
+
   if (!isLoaded) {
     return (
       <div className="blog-auth-state" role="status">
@@ -107,7 +126,7 @@ function ManagerSession() {
   if (!isSignedIn || visibleStatus === 'signed-out') {
     return (
       <div className="blog-sign-in-wrap">
-        <SignIn routing="virtual" />
+        <SignIn routing="virtual" forceRedirectUrl="/blog?author=1" signUpForceRedirectUrl="/blog?author=1" />
       </div>
     )
   }
@@ -128,18 +147,14 @@ function ManagerSession() {
           <span className="blog-manager-check" aria-hidden="true">&#10003;</span>
           <div>
             <p className="blog-panel-label">Manager session</p>
-            <h2>Manager access confirmed.</h2>
+            <h2>Your writing workspace</h2>
           </div>
-          <UserButton />
         </div>
-        <p>
-          Your account has passed the server’s manager checks. Account security is available below.
-          Creating, saving, and publishing posts is not connected yet; signing in alone does not enable those features.
-        </p>
         <div className="blog-manager-actions">
-          <button type="button" onClick={() => openUserProfile()}>Account settings</button>
-          <button type="button" onClick={() => signOut({ redirectUrl: '/blog' })}>Sign out</button>
+          <button type="button" disabled={busy} onClick={openSettings}>Account settings</button>
+          <button type="button" disabled={busy} onClick={leaveAccount}>Sign out</button>
         </div>
+        <BlogEditor key={userId} getToken={getToken} onDirtyChange={onDirtyChange} onPublished={onPublished} />
       </div>
     )
   }
@@ -164,10 +179,9 @@ function ManagerSession() {
         </div>
       )}
       <div className="blog-auth-state-actions">
-        <button type="button" onClick={() => openUserProfile()}>Account settings</button>
+        <button type="button" onClick={openSettings}>Account settings</button>
         <button type="button" onClick={retryVerification}>Check access again</button>
-        <UserButton />
-        <button type="button" className="blog-secondary-button" onClick={() => signOut({ redirectUrl: '/blog' })}>
+        <button type="button" className="blog-secondary-button" onClick={leaveAccount}>
           Sign out
         </button>
       </div>
@@ -175,7 +189,7 @@ function ManagerSession() {
   )
 }
 
-function BlogAuth({ theme }) {
+function BlogAuth({ theme, onDirtyChange, onPublished, dirty, busy }) {
   if (!clerkKey) {
     return (
       <div className="blog-auth-state blog-auth-state--setup" role="status">
@@ -195,12 +209,45 @@ function BlogAuth({ theme }) {
       afterSignOutUrl="/blog"
       appearance={authAppearance(theme)}
     >
-      <ManagerSession />
+      <ManagerSession onDirtyChange={onDirtyChange} onPublished={onPublished} dirty={dirty} busy={busy} />
     </ClerkProvider>
   )
 }
 
+function AuthorDialog({ theme, onClose, onPublished }) {
+  const dialog = useRef(null)
+  const [editing, setEditing] = useState({ dirty: false, busy: false })
+  useEffect(() => {
+    const element = dialog.current
+    const previousOverflow = document.body.style.overflow
+    element.showModal()
+    document.body.style.overflow = 'hidden'
+    return () => { element.close(); document.body.style.overflow = previousOverflow }
+  }, [])
+  const close = () => {
+    if (editing.busy) return
+    if (editing.dirty && !window.confirm('Leave the workspace and discard unsaved changes?')) return
+    dialog.current.close()
+    onClose()
+  }
+  return <dialog ref={dialog} className="blog-author-dialog" aria-labelledby="author-dialog-title" onCancel={(event) => { event.preventDefault(); close() }}>
+    <div className="blog-dialog-header"><h2 id="author-dialog-title">Author workspace</h2><button className="blog-button blog-button-secondary" disabled={editing.busy} onClick={close}>Close</button></div>
+    <BlogAuth theme={theme} onDirtyChange={setEditing} onPublished={onPublished} dirty={editing.dirty} busy={editing.busy} />
+  </dialog>
+}
+
 function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThemeToggle }) {
+  const [authorOpen, setAuthorOpen] = useState(() => new URLSearchParams(window.location.search).get('author') === '1')
+  const [refresh, setRefresh] = useState(0)
+  const authorButton = useRef(null)
+  const setAuthor = (open) => {
+    const url = new URL(window.location.href)
+    if (open) url.searchParams.set('author', '1')
+    else url.searchParams.delete('author')
+    window.history.replaceState({}, '', url)
+    setAuthorOpen(open)
+    if (!open) authorButton.current?.focus()
+  }
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
@@ -218,6 +265,7 @@ function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThe
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
           <ThemeToggle theme={theme} onToggle={onThemeToggle} />
+          <button ref={authorButton} className="blog-button blog-author-button" aria-haspopup="dialog" onClick={() => setAuthor(true)}>Author sign-in</button>
         </div>
       </header>
 
@@ -232,22 +280,10 @@ function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThe
           </div>
         </section>
 
-        <section className="blog-workspace" aria-labelledby="manager-access-title">
-          <div className="blog-workspace-copy">
-            <p className="blog-eyebrow">Author area</p>
-            <h2 id="manager-access-title">Sign in to manage your account.</h2>
-            <p>
-              Only the verified manager account can access this area. Visitors do not need to sign in.
-            </p>
-          </div>
-          <div className="blog-auth-window">
-            <div className="blog-auth-body">
-              <BlogAuth theme={theme} />
-            </div>
-          </div>
-        </section>
+        <BlogPosts refresh={refresh} />
 
       </main>
+      {authorOpen && <AuthorDialog theme={theme} onClose={() => setAuthor(false)} onPublished={() => setRefresh((n) => n + 1)} />}
 
       <footer className="blog-footer">
         <div className="footer-inner">

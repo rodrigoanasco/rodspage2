@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Editor UI test harness</title></head>
+<body><div id="root"></div><script type="module">
+// Isolated UI fixture for Vite development only. Not an app route or an auth bypass.
+import React from 'react'
+import { createRoot } from 'react-dom/client'
+import BlogEditor from '/src/BlogEditor.jsx'
+import '/src/index.css'
+import '/src/App.css'
+import '/src/BlogPage.css'
+const records = new Map()
+window.fetch = async (_url, options = {}) => {
+  if (options.method === 'PUT') {
+    const request = JSON.parse(options.body)
+    const old = records.get(request.id)
+    if (old && old.revision !== request.revision) return Response.json({ message: 'Conflict' }, { status: 409 })
+    const draft = { title: request.title, body: request.body, videoUrl: request.videoUrl }
+    const post = { id: request.id, revision: request.revision + 1, draft, isPublished: request.action === 'publish' || (request.action === 'save' && old?.isPublished) }
+    records.set(post.id, post)
+    return Response.json({ post })
+  }
+  return Response.json({ posts: [...records.values()], hasMore: false })
+}
+const getToken = async () => 'fixture-token-not-a-real-credential'
+const onDirtyChange = () => {}
+const onPublished = () => {}
+createRoot(document.getElementById('root')).render(React.createElement('main', { className: 'blog-page', style: { padding: '24px' } }, React.createElement(BlogEditor, { getToken, onDirtyChange, onPublished })))
+</script></body></html>
