@@ -89,7 +89,7 @@ function ManagerSession() {
     }
   }
 
-  if (!isLoaded || visibleStatus === 'idle' || visibleStatus === 'checking') {
+  if (!isLoaded) {
     return (
       <div className="blog-auth-state" role="status">
         <span className="blog-auth-spinner" aria-hidden="true" />
@@ -102,6 +102,15 @@ function ManagerSession() {
     return (
       <div className="blog-sign-in-wrap">
         <SignIn routing="virtual" />
+      </div>
+    )
+  }
+
+  if (visibleStatus === 'idle' || visibleStatus === 'checking') {
+    return (
+      <div className="blog-auth-state" role="status">
+        <span className="blog-auth-spinner" aria-hidden="true" />
+        <p>Checking your secure session...</p>
       </div>
     )
   }
@@ -138,6 +147,7 @@ function ManagerSession() {
         {visibleStatus === 'error' && (
           <button type="button" onClick={retryVerification}>Try again</button>
         )}
+        <UserButton />
         <button type="button" className="blog-secondary-button" onClick={() => signOut({ redirectUrl: '/blog' })}>
           Sign out
         </button>
