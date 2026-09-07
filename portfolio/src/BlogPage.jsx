@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { ClerkProvider, SignIn, UserButton, useAuth } from '@clerk/react'
+import { ClerkProvider, SignIn, UserButton, useAuth, useClerk } from '@clerk/react'
 import instagramLogo from './assets/images/tech_stack/instagram 1.png'
 import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
 import ThemeToggle from './ThemeToggle'
@@ -27,7 +27,7 @@ const authAppearance = (theme) => ({
 })
 
 const requestManagerSession = async (getToken, signal) => {
-  const token = await getToken()
+  const token = await getToken({ skipCache: true })
   if (!token) return { status: 'signed-out', message: '' }
 
   const response = await fetch('/api/blog/session', {
@@ -36,18 +36,30 @@ const requestManagerSession = async (getToken, signal) => {
     cache: 'no-store',
     signal,
   })
+  if (!response.headers.get('content-type')?.includes('application/json')) {
+    return {
+      status: 'error',
+      message: import.meta.env.DEV
+        ? 'The local Vite server is not running the login-check API. Open the deployed website to sign in, or run this project with Vercel’s local server and its server-side environment variables.'
+        : `The login-check API returned an unexpected response (HTTP ${response.status}). Please try again later; this is a server issue, not an account rejection.`,
+    }
+  }
   const result = await response.json().catch(() => ({}))
 
   if (response.ok && result.manager === true) return { status: 'authorized', message: '' }
 
   return {
-    status: response.status === 403 ? 'forbidden' : 'error',
+    status: response.status === 403
+      ? (result.code === 'MFA_REQUIRED' ? 'mfa-required' : 'forbidden')
+      : 'error',
     message: result.message || 'The manager session could not be verified.',
   }
 }
 
 function ManagerSession() {
   const { getToken, isLoaded, isSignedIn, signOut, userId } = useAuth()
+  const { openUserProfile } = useClerk()
+  const [verificationAttempt, setVerificationAttempt] = useState(0)
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
   const [checkedUserId, setCheckedUserId] = useState(null)
@@ -58,6 +70,7 @@ function ManagerSession() {
     const controller = new AbortController()
     requestManagerSession(getToken, controller.signal)
       .then((result) => {
+        if (controller.signal.aborted) return
         setStatus(result.status)
         setMessage(result.message)
         setCheckedUserId(userId)
@@ -70,23 +83,16 @@ function ManagerSession() {
       })
 
     return () => controller.abort()
-  }, [getToken, isLoaded, isSignedIn, userId])
+  }, [getToken, isLoaded, isSignedIn, userId, verificationAttempt])
 
   const visibleStatus = checkedUserId === userId ? status : 'idle'
 
-  const retryVerification = async () => {
+  const retryVerification = () => {
     setStatus('checking')
     setMessage('')
     setCheckedUserId(userId)
 
-    try {
-      const result = await requestManagerSession(getToken)
-      setStatus(result.status)
-      setMessage(result.message)
-    } catch {
-      setStatus('error')
-      setMessage('The manager session could not be verified. Please try again.')
-    }
+    setVerificationAttempt((attempt) => attempt + 1)
   }
 
   if (!isLoaded) {
@@ -122,16 +128,16 @@ function ManagerSession() {
           <span className="blog-manager-check" aria-hidden="true">&#10003;</span>
           <div>
             <p className="blog-panel-label">Manager session</p>
-            <h2>You are securely signed in.</h2>
+            <h2>Manager access confirmed.</h2>
           </div>
           <UserButton />
         </div>
         <p>
-          Your verified identity and manager email were confirmed by the server. The publishing workspace will be
-          connected here in phase two.
+          Your account has passed the server’s manager checks. Account security is available below.
+          Creating, saving, and publishing posts is not connected yet; signing in alone does not enable those features.
         </p>
         <div className="blog-manager-actions">
-          <span>Publishing controls coming next</span>
+          <button type="button" onClick={() => openUserProfile()}>Account settings</button>
           <button type="button" onClick={() => signOut({ redirectUrl: '/blog' })}>Sign out</button>
         </div>
       </div>
@@ -141,12 +147,25 @@ function ManagerSession() {
   return (
     <div className={`blog-auth-state blog-auth-state--${visibleStatus}`} role="alert">
       <span className="blog-auth-lock" aria-hidden="true">!</span>
-      <h2>{visibleStatus === 'forbidden' ? 'This is not the manager account.' : 'Session check unavailable.'}</h2>
+      <h2>{visibleStatus === 'mfa-required' ? 'One more step: secure your account.' : visibleStatus === 'forbidden' ? 'This account is not a manager.' : 'Session check unavailable.'}</h2>
       <p>{message}</p>
+      {visibleStatus === 'mfa-required' && (
+        <div className="blog-mfa-help">
+          <ol>
+            <li>Open account settings below and select <strong>Security</strong>.</li>
+            <li>Add an authenticator app under two-step verification and save your backup codes privately.</li>
+            <li>Close settings and select <strong>Check access again</strong>.</li>
+          </ol>
+          <p>Google account security settings do not enable this website’s Clerk two-step verification.</p>
+          <details>
+            <summary>No two-step verification option?</summary>
+            <p>In your Clerk Dashboard, open User &amp; authentication → Multi-factor and enable Authenticator application and Backup codes for the same application instance used by this website. Then reload this page.</p>
+          </details>
+        </div>
+      )}
       <div className="blog-auth-state-actions">
-        {visibleStatus === 'error' && (
-          <button type="button" onClick={retryVerification}>Try again</button>
-        )}
+        <button type="button" onClick={() => openUserProfile()}>Account settings</button>
+        <button type="button" onClick={retryVerification}>Check access again</button>
         <UserButton />
         <button type="button" className="blog-secondary-button" onClick={() => signOut({ redirectUrl: '/blog' })}>
           Sign out
@@ -186,12 +205,6 @@ function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThe
     window.scrollTo(0, 0)
   }, [])
 
-  const phases = [
-    { number: '01', title: 'Secure access', text: 'Manager-only login, verified on the server.', active: true },
-    { number: '02', title: 'Publishing', text: 'Create, edit, preview, and publish thoughts.' },
-    { number: '03', title: 'Media & conversation', text: 'Video embeds, comments, moderation, and spam controls.' },
-  ]
-
   return (
     <div className="blog-page">
       <header className="top-nav blog-top-nav">
@@ -211,65 +224,29 @@ function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThe
       <main className="blog-main">
         <section className="blog-hero">
           <div className="blog-hero-copy">
-            <p className="blog-eyebrow">Notes, experiments & things worth sharing</p>
-            <h1>A quieter place for unfinished thoughts.</h1>
+            <p className="blog-eyebrow">Rodrigo’s journal</p>
+            <h1>Blog</h1>
             <p className="blog-intro">
-              This will become a home for ideas, project notes, videos, and conversations. For now, the foundation is
-              a secure author session that only the site manager can use.
+              Thoughts, project notes, and things I’m learning along the way.
             </p>
-          </div>
-          <div className="blog-orbit" aria-hidden="true">
-            <span>thoughts</span>
-            <span>videos</span>
-            <span>notes</span>
-            <div>R.A</div>
           </div>
         </section>
 
         <section className="blog-workspace" aria-labelledby="manager-access-title">
           <div className="blog-workspace-copy">
-            <p className="blog-eyebrow">Phase 01 / Active</p>
-            <h2 id="manager-access-title">Manager access</h2>
+            <p className="blog-eyebrow">Author area</p>
+            <h2 id="manager-access-title">Sign in to manage your account.</h2>
             <p>
-              Sign in with the private manager account. Authentication is handled by Clerk; authorization is checked
-              again by the server before any management controls are revealed.
+              Only the verified manager account can access this area. Visitors do not need to sign in.
             </p>
-            <ul className="blog-security-list">
-              <li>Verified email required</li>
-              <li>Multi-factor authentication required</li>
-              <li>Short-lived signed session tokens</li>
-              <li>No passwords stored in this codebase</li>
-            </ul>
           </div>
           <div className="blog-auth-window">
-            <div className="blog-window-bar">
-              <span />
-              <span />
-              <span />
-              <p>manager.session</p>
-            </div>
             <div className="blog-auth-body">
               <BlogAuth theme={theme} />
             </div>
           </div>
         </section>
 
-        <section className="blog-roadmap" aria-labelledby="blog-roadmap-title">
-          <div className="blog-roadmap-heading">
-            <p className="blog-eyebrow">Build roadmap</p>
-            <h2 id="blog-roadmap-title">One reliable layer at a time.</h2>
-          </div>
-          <div className="blog-phase-grid">
-            {phases.map((phase) => (
-              <article className={phase.active ? 'is-active' : ''} key={phase.number}>
-                <span>{phase.number}</span>
-                <h3>{phase.title}</h3>
-                <p>{phase.text}</p>
-                <small>{phase.active ? 'In progress' : 'Upcoming'}</small>
-              </article>
-            ))}
-          </div>
-        </section>
       </main>
 
       <footer className="blog-footer">
@@ -289,7 +266,7 @@ function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThe
             <a href="/blog" onClick={onBlog}>Blog</a>
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
-          <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
+          <p>&copy; {new Date().getFullYear()} Rodrigo Anasco. All rights reserved</p>
         </div>
       </footer>
     </div>
