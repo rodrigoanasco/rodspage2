@@ -1,122 +1,142 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
-import AboutPage from './AboutPage'
-import ContactPage from './ContactPage'
-import ProjectsPage from './ProjectsPage'
-import ThemeToggle from './ThemeToggle'
-import landingImage from './assets/images/landing_page_image.png'
-import unifyLogo from './assets/images/experience/unify_logo.png'
-import subvisionLogo from './assets/images/experience/subvision_logo.png'
-import ficLogo from './assets/images/experience/fic_logo.png'
-import yresLogo from './assets/images/experience/york_region_educational_services 1.png'
-import instagramLogo from './assets/images/tech_stack/instagram 1.png'
-import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
-import cLogo from './assets/images/tech_stack/c-original.svg'
-import cPlusPlusLogo from './assets/images/tech_stack/cplusplus-original.svg'
-import cssLogo from './assets/images/tech_stack/css3-original.svg'
-import dockerLogo from './assets/images/tech_stack/docker-original.svg'
-import firebaseLogo from './assets/images/tech_stack/firebase-original.svg'
-import githubLogo from './assets/images/tech_stack/github-original.svg'
-import javaLogo from './assets/images/tech_stack/java-original.svg'
-import javascriptLogo from './assets/images/tech_stack/javascript-original.svg'
-import kaggleLogo from './assets/images/tech_stack/kaggle-original.svg'
-import latexLogo from './assets/images/tech_stack/latex-original.svg'
-import linuxLogo from './assets/images/tech_stack/linux-original.svg'
-import mysqlLogo from './assets/images/tech_stack/mysql-original.svg'
-import nodeLogo from './assets/images/tech_stack/nodejs-original.svg'
-import numpyLogo from './assets/images/tech_stack/numpy-original.svg'
-import pandasLogo from './assets/images/tech_stack/pandas-original.svg'
-import postgresLogo from './assets/images/tech_stack/postgresql-original.svg'
-import awsLogo from './assets/images/tech_stack/amazonwebservices-original-wordmark.svg'
-import pythonLogo from './assets/images/tech_stack/python-original.svg'
-import reactLogo from './assets/images/tech_stack/react-original.svg'
-import slackLogo from './assets/images/tech_stack/slack-original.svg'
-import tailwindLogo from './assets/images/tech_stack/tailwindcss-original.svg'
-import vscodeLogo from './assets/images/tech_stack/vscode-original.svg'
-import jupyterLogo from './assets/images/tech_stack/jupyter-original.svg'
-import openapiLogo from './assets/images/tech_stack/openapi-original.svg'
-import cmakeLogo from './assets/images/tech_stack/cmake-original.svg'
-import androidStudioLogo from './assets/images/tech_stack/androidstudio-original.svg'
-import supabaseLogo from './assets/images/tech_stack/supabase-original.svg'
-import opencvLogo from './assets/images/tech_stack/opencv-original.svg'
-import bashLogo from './assets/images/tech_stack/bash-original.svg'
-import pytorchLogo from './assets/images/tech_stack/pytorch-original.svg'
-import matplotlibLogo from './assets/images/tech_stack/matplotlib-original.svg'
-import './App.css'
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import AboutPage from "./AboutPage";
+import ContactPage from "./ContactPage";
+import ProjectsPage from "./ProjectsPage";
+import ThemeToggle from "./ThemeToggle";
+import landingImage from "./assets/images/landing_page_image.png";
+import unifyLogo from "./assets/images/experience/unify_logo.png";
+import subvisionLogo from "./assets/images/experience/subvision_logo.png";
+import ficLogo from "./assets/images/experience/fic_logo.png";
+import yresLogo from "./assets/images/experience/york_region_educational_services 1.png";
+import instagramLogo from "./assets/images/tech_stack/instagram 1.png";
+import linkedinLogo from "./assets/images/tech_stack/linkedin-original.svg";
+import cLogo from "./assets/images/tech_stack/c-original.svg";
+import cPlusPlusLogo from "./assets/images/tech_stack/cplusplus-original.svg";
+import cssLogo from "./assets/images/tech_stack/css3-original.svg";
+import dockerLogo from "./assets/images/tech_stack/docker-original.svg";
+import firebaseLogo from "./assets/images/tech_stack/firebase-original.svg";
+import githubLogo from "./assets/images/tech_stack/github-original.svg";
+import javaLogo from "./assets/images/tech_stack/java-original.svg";
+import javascriptLogo from "./assets/images/tech_stack/javascript-original.svg";
+import kaggleLogo from "./assets/images/tech_stack/kaggle-original.svg";
+import latexLogo from "./assets/images/tech_stack/latex-original.svg";
+import linuxLogo from "./assets/images/tech_stack/linux-original.svg";
+import mysqlLogo from "./assets/images/tech_stack/mysql-original.svg";
+import nodeLogo from "./assets/images/tech_stack/nodejs-original.svg";
+import numpyLogo from "./assets/images/tech_stack/numpy-original.svg";
+import pandasLogo from "./assets/images/tech_stack/pandas-original.svg";
+import postgresLogo from "./assets/images/tech_stack/postgresql-original.svg";
+import awsLogo from "./assets/images/tech_stack/amazonwebservices-original-wordmark.svg";
+import pythonLogo from "./assets/images/tech_stack/python-original.svg";
+import reactLogo from "./assets/images/tech_stack/react-original.svg";
+import slackLogo from "./assets/images/tech_stack/slack-original.svg";
+import tailwindLogo from "./assets/images/tech_stack/tailwindcss-original.svg";
+import vscodeLogo from "./assets/images/tech_stack/vscode-original.svg";
+import jupyterLogo from "./assets/images/tech_stack/jupyter-original.svg";
+import openapiLogo from "./assets/images/tech_stack/openapi-original.svg";
+import cmakeLogo from "./assets/images/tech_stack/cmake-original.svg";
+import androidStudioLogo from "./assets/images/tech_stack/androidstudio-original.svg";
+import supabaseLogo from "./assets/images/tech_stack/supabase-original.svg";
+import opencvLogo from "./assets/images/tech_stack/opencv-original.svg";
+import bashLogo from "./assets/images/tech_stack/bash-original.svg";
+import pytorchLogo from "./assets/images/tech_stack/pytorch-original.svg";
+import matplotlibLogo from "./assets/images/tech_stack/matplotlib-original.svg";
+import "./App.css";
 
-const BlogPage = lazy(() => import('./BlogPage'))
+const BlogPage = lazy(() => import("./BlogPage"));
 
-const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
-const scrollToPageTop = (behavior = 'auto') => {
-  window.scrollTo({ top: 0, left: 0, behavior })
-}
+const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+const scrollToPageTop = (behavior = "auto") => {
+  window.scrollTo({ top: 0, left: 0, behavior });
+};
 
 const getInitialTheme = () => {
   try {
-    const savedTheme = window.localStorage.getItem('theme')
-    return savedTheme === 'light' ? 'light' : 'dark'
+    const savedTheme = window.localStorage.getItem("theme");
+    return savedTheme === "light" ? "light" : "dark";
   } catch {
-    return 'dark'
+    return "dark";
   }
-}
+};
 
-function OptionalExperienceImage({ src, fallback, alt, label, className = '', style }) {
-  const [failed, setFailed] = useState(false)
-  const imageSource = failed ? fallback : src
+function OptionalExperienceImage({
+  src,
+  fallback,
+  alt,
+  label,
+  className = "",
+  style,
+}) {
+  const [failed, setFailed] = useState(false);
+  const imageSource = failed ? fallback : src;
 
   return (
     <figure className={`experience-image-card ${className}`} style={style}>
-      <img src={imageSource} alt={alt} loading="lazy" decoding="async" onError={() => setFailed(true)} />
+      <img
+        src={imageSource}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailed(true)}
+      />
       <figcaption>{label}</figcaption>
     </figure>
-  )
+  );
 }
 
 function App() {
   const [route, setRoute] = useState(() => {
-    if (window.location.pathname === '/about') return 'about'
-    if (window.location.pathname === '/projects') return 'projects'
-    if (window.location.pathname === '/blog') return 'blog'
-    if (window.location.pathname === '/contact') return 'contact'
-    return 'home'
-  })
+    if (window.location.pathname === "/about") return "about";
+    if (window.location.pathname === "/projects") return "projects";
+    if (window.location.pathname === "/blog") return "blog";
+    if (window.location.pathname === "/contact") return "contact";
+    return "home";
+  });
   const [pendingHash, setPendingHash] = useState(() =>
-    (window.location.hash ? { hash: window.location.hash, behavior: 'auto' } : null),
-  )
-  const [theme, setTheme] = useState(getInitialTheme)
-  const [introVisible, setIntroVisible] = useState(false)
-  const [workVisible, setWorkVisible] = useState(false)
-  const [stackVisible, setStackVisible] = useState(false)
+    window.location.hash
+      ? { hash: window.location.hash, behavior: "auto" }
+      : null,
+  );
+  const [theme, setTheme] = useState(getInitialTheme);
+  const [introVisible, setIntroVisible] = useState(false);
+  const [workVisible, setWorkVisible] = useState(false);
+  const [stackVisible, setStackVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState({
     hero: 0,
-  })
+  });
 
   const featuredExperiences = useMemo(
     () => [
       {
-        id: 'unify',
-        period: 'Aug 2025 - Present',
-        company: 'Unify Social',
-        role: 'Software Coordinator',
-        location: 'Burnaby, BC',
-        headline: 'A newcomer platform built around guidance, community, and confidence.',
+        id: "unify",
+        period: "Aug 2025 - June 2026",
+        company: "Unify Social",
+        role: "Software Coordinator",
+        location: "Burnaby, BC",
+        headline:
+          "A newcomer platform built around guidance, community, and confidence.",
         summary:
-          'Unify helps newcomers in Canada navigate disconnected resources by bringing learning content, personalized settlement tasks, AI support, community spaces, and local events into one digital experience.',
+          "Unify helps newcomers in Canada navigate disconnected resources by bringing learning content, personalized settlement tasks, AI support, community spaces, and local events into one digital experience.",
         highlights: [
-          'Translated Figma product flows into responsive React Native and TypeScript mobile screens.',
-          'Connected Supabase, Sanity CMS, APIs, and Resend workflows for dynamic onboarding and checklist experiences.',
-          'Supported product iteration across mobile, content, and community features for a launched newcomer support app.',
+          "Translated Figma product flows into responsive React Native and TypeScript mobile screens.",
+          "Connected Supabase, Sanity CMS, APIs, and Resend workflows for dynamic onboarding and checklist experiences.",
+          "Supported product iteration across mobile, content, and community features for a launched newcomer support app.",
         ],
-        facts: ['Digital settlement platform', 'Learn + checklist + community', 'In-person newcomer events'],
-        projectHash: 'unify',
+        facts: [
+          "Digital settlement platform",
+          "Learn + checklist + community",
+          "In-person newcomer events",
+        ],
+        projectHash: "unify",
         logo: unifyLogo,
-        accent: 'warm',
+        accent: "warm",
         media: [
           {
-            src: '/experience/unify-phone.png',
+            src: "/experience/unify-phone.png",
             fallback: unifyLogo,
-            alt: 'Unify Social mobile app screen',
-            label: 'Mobile learning flow',
-            className: 'portrait-card contain-card',
+            alt: "Unify Social mobile app screen",
+            label: "Mobile learning flow",
+            className: "portrait-card contain-card",
             fromX: -170,
             fromY: 70,
             rotate: -8,
@@ -124,11 +144,11 @@ function App() {
             zIndex: 2,
           },
           {
-            src: '/experience/unify-group-formal.jpg',
+            src: "/experience/unify-group-formal.jpg",
             fallback: unifyLogo,
-            alt: 'Unify Social formal team group photo',
-            label: 'Launch team',
-            className: 'wide-card',
+            alt: "Unify Social formal team group photo",
+            label: "Launch team",
+            className: "wide-card",
             fromX: 190,
             fromY: 45,
             rotate: 5,
@@ -136,11 +156,11 @@ function App() {
             zIndex: 4,
           },
           {
-            src: '/experience/unify-group-social.jpg',
+            src: "/experience/unify-group-social.jpg",
             fallback: unifyLogo,
-            alt: 'Unify Social community group photo',
-            label: 'Team Social',
-            className: 'small-card',
+            alt: "Unify Social community group photo",
+            label: "Team Social",
+            className: "small-card",
             fromX: -110,
             fromY: 190,
             rotate: 7,
@@ -148,11 +168,11 @@ function App() {
             zIndex: 3,
           },
           {
-            src: '/experience/unify-live-appstore.jpg',
+            src: "/experience/unify-live-appstore.jpg",
             fallback: unifyLogo,
-            alt: 'Unify Social is live on the App Store',
-            label: 'App Store launch',
-            className: 'wide-card lower-card contain-card',
+            alt: "Unify Social is live on the App Store",
+            label: "App Store launch",
+            className: "wide-card lower-card contain-card",
             fromX: 130,
             fromY: 170,
             rotate: -5,
@@ -162,30 +182,35 @@ function App() {
         ],
       },
       {
-        id: 'subvision',
-        period: 'Feb 2025 - Jan 2026',
-        company: 'Subvision Robotics',
-        role: 'Software Developer',
-        location: 'Burnaby, BC',
-        headline: 'A subsea robotics company taking a prevention-first approach to hull maintenance.',
+        id: "subvision",
+        period: "Feb 2025 - Jan 2026",
+        company: "Subvision Robotics",
+        role: "Software Developer",
+        location: "Burnaby, BC",
+        headline:
+          "A subsea robotics company taking a prevention-first approach to hull maintenance.",
         summary:
-          'Subvision is building ZIMA, a hull-climbing subsea rover designed to stop early-stage biofouling before it becomes drag, using repeatable maintenance passes, close-range UV-C treatment, and real-world hardware iteration.',
+          "Subvision is building ZIMA, a hull-climbing subsea rover designed to stop early-stage biofouling before it becomes drag, using repeatable maintenance passes, close-range UV-C treatment, and real-world hardware iteration.",
         highlights: [
-          'Worked on autonomous coverage planning for complex 3D ship hull surfaces.',
-          'Built Python, NumPy, and KDTree pipelines that convert mesh data into point-cloud graph structures.',
-          'Created simulation and visualization tooling to study coverage efficiency, repeated traversal, and dead-zone recovery.',
+          "Worked on autonomous coverage planning for complex 3D ship hull surfaces.",
+          "Built Python, NumPy, and KDTree pipelines that convert mesh data into point-cloud graph structures.",
+          "Created simulation and visualization tooling to study coverage efficiency, repeated traversal, and dead-zone recovery.",
         ],
-        facts: ['ZIMA subsea rover', 'Hull-climbing mobility', 'Coverage planning software'],
-        projectHash: 'subvision',
+        facts: [
+          "ZIMA subsea rover",
+          "Hull-climbing mobility",
+          "Coverage planning software",
+        ],
+        projectHash: "subvision",
         logo: subvisionLogo,
-        accent: 'cool',
+        accent: "cool",
         media: [
           {
-            src: '/experience/subvision-robot.jpg',
+            src: "/experience/subvision-robot.jpg",
             fallback: subvisionLogo,
-            alt: 'Subvision Robotics wheeled robot prototype',
-            label: 'Prototype hardware',
-            className: 'portrait-card',
+            alt: "Subvision Robotics wheeled robot prototype",
+            label: "Prototype hardware",
+            className: "portrait-card",
             fromX: 170,
             fromY: 50,
             rotate: 6,
@@ -193,11 +218,11 @@ function App() {
             zIndex: 2,
           },
           {
-            src: '/experience/subvision-cad.jpg',
+            src: "/experience/subvision-cad.jpg",
             fallback: subvisionLogo,
-            alt: 'Subvision Robotics CAD assembly',
-            label: 'Mechanical model',
-            className: 'wide-card',
+            alt: "Subvision Robotics CAD assembly",
+            label: "Mechanical model",
+            className: "wide-card",
             fromX: -130,
             fromY: 190,
             rotate: 4,
@@ -205,11 +230,11 @@ function App() {
             zIndex: 3,
           },
           {
-            src: '/experience/subvision-hull-points.jpg',
+            src: "/experience/subvision-hull-points.jpg",
             fallback: subvisionLogo,
-            alt: '3D point cloud graph of a ship hull',
-            label: 'Coverage simulation',
-            className: 'wide-card lower-card',
+            alt: "3D point cloud graph of a ship hull",
+            label: "Coverage simulation",
+            className: "wide-card lower-card",
             fromX: 120,
             fromY: 180,
             rotate: -5,
@@ -220,71 +245,71 @@ function App() {
       },
     ],
     [],
-  )
+  );
 
   const volunteerExperiences = useMemo(
     () => [
       {
-        period: 'Mar 2026 - Present',
-        company: 'York Region Educational Services',
-        role: 'Data Analytics & Web Design',
+        period: "Mar 2026 - Present",
+        company: "York Region Educational Services",
+        role: "Data Analytics & Web Design",
         description:
-          'Collected, cleaned, and analyzed data for decision making while supporting user-friendly website design and maintenance.',
+          "Collected, cleaned, and analyzed data for decision making while supporting user-friendly website design and maintenance.",
         logo: yresLogo,
       },
       {
-        period: 'Aug 2023 - Apr 2024',
-        company: 'Fraser International College',
-        role: 'Peer Educator',
+        period: "Aug 2023 - Apr 2024",
+        company: "Fraser International College",
+        role: "Peer Educator",
         description:
-          'Tutored computing and math courses, created study materials, and helped students build confidence through personalized guidance.',
+          "Tutored computing and math courses, created study materials, and helped students build confidence through personalized guidance.",
         logo: ficLogo,
       },
     ],
     [],
-  )
+  );
 
   const certificateItems = useMemo(
     () => [
       {
-        title: 'Impact Leadership',
-        issuer: 'York Region Educational Services',
-        date: '2026',
-        image: '/certificates/impact_certificate_YRES.png',
-        href: '/certificates/impact_certificate_YRES.png',
+        title: "Impact Leadership",
+        issuer: "York Region Educational Services",
+        date: "2026",
+        image: "/certificates/impact_certificate_YRES.png",
+        href: "/certificates/impact_certificate_YRES.png",
         description:
-          'Completed a 12-workshop leadership course focused on transferable skills, job readiness, and academic performance.',
+          "Completed a 12-workshop leadership course focused on transferable skills, job readiness, and academic performance.",
       },
       {
-        title: 'Foundations: Data, Data, Everywhere',
-        issuer: 'Google / Coursera',
-        date: 'May 2026',
-        image: '/certificates/coursera-data-everywhere-preview.png',
-        href: '/certificates/Coursera%20Data%20Data%20Everywhere.pdf',
+        title: "Foundations: Data, Data, Everywhere",
+        issuer: "Google / Coursera",
+        date: "May 2026",
+        image: "/certificates/coursera-data-everywhere-preview.png",
+        href: "/certificates/Coursera%20Data%20Data%20Everywhere.pdf",
         description:
-          'Built data analytics foundations across the data life cycle, analytical thinking, and using data to support decisions.',
+          "Built data analytics foundations across the data life cycle, analytical thinking, and using data to support decisions.",
       },
       {
-        title: 'Ask Questions to Make Data-Driven Decisions',
-        issuer: 'Google / Coursera',
-        date: 'Jun 2026',
-        image: '/certificates/coursera-ask-questions-preview.png',
-        href: '/certificates/Coursera%20Ask%20Questions%20to%20make%20data%20driven%20decisions.pdf',
+        title: "Ask Questions to Make Data-Driven Decisions",
+        issuer: "Google / Coursera",
+        date: "Jun 2026",
+        image: "/certificates/coursera-ask-questions-preview.png",
+        href: "/certificates/Coursera%20Ask%20Questions%20to%20make%20data%20driven%20decisions.pdf",
         description:
-          'Practiced framing business questions, defining useful metrics, and preparing analysis around clear stakeholder needs.',
+          "Practiced framing business questions, defining useful metrics, and preparing analysis around clear stakeholder needs.",
       },
       {
-        title: 'Worker Health and Safety Awareness in 4 Steps',
-        issuer: 'Ontario Ministry of Labour, Training and Skills Development',
-        date: 'Mar 2026',
-        image: '/certificates/certificate_of_completion_4steps.png',
-        href: '/certificates/certificate_of_completion_4steps.png',
+        title: "Worker Health and Safety Awareness in 4 Steps",
+        issuer: "Ontario Ministry of Labour, Training and Skills Development",
+        date: "Mar 2026",
+        image: "/certificates/certificate_of_completion_4steps.png",
+        href: "/certificates/certificate_of_completion_4steps.png",
         description:
-          'Completed Ontario workplace safety training covering worker rights, responsibilities, and hazard awareness.',
+          "Completed Ontario workplace safety training covering worker rights, responsibilities, and hazard awareness.",
       },
     ],
     [],
-  )
+  );
 
   const techStack = useMemo(
     () => [
@@ -321,209 +346,219 @@ function App() {
       matplotlibLogo,
     ],
     [],
-  )
-  const techTrackA = useMemo(() => techStack.slice(0, Math.ceil(techStack.length / 2)), [techStack])
-  const techTrackB = useMemo(() => techStack.slice(Math.ceil(techStack.length / 2)), [techStack])
+  );
+  const techTrackA = useMemo(
+    () => techStack.slice(0, Math.ceil(techStack.length / 2)),
+    [techStack],
+  );
+  const techTrackB = useMemo(
+    () => techStack.slice(Math.ceil(techStack.length / 2)),
+    [techStack],
+  );
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme
-    document.documentElement.style.colorScheme = theme
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
     try {
-      window.localStorage.setItem('theme', theme)
+      window.localStorage.setItem("theme", theme);
     } catch {
       // Theme still updates even if storage is unavailable.
     }
-  }, [theme])
+  }, [theme]);
 
   useEffect(() => {
-    if (!('scrollRestoration' in window.history)) return undefined
+    if (!("scrollRestoration" in window.history)) return undefined;
 
-    const previousScrollRestoration = window.history.scrollRestoration
-    window.history.scrollRestoration = 'manual'
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
 
     return () => {
-      window.history.scrollRestoration = previousScrollRestoration
-    }
-  }, [])
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
 
   useEffect(() => {
     const onPopState = () => {
-      let nextRoute = 'home'
-      if (window.location.pathname === '/about') nextRoute = 'about'
-      if (window.location.pathname === '/projects') nextRoute = 'projects'
-      if (window.location.pathname === '/blog') nextRoute = 'blog'
-      if (window.location.pathname === '/contact') nextRoute = 'contact'
-      if (nextRoute !== 'home') scrollToPageTop()
+      let nextRoute = "home";
+      if (window.location.pathname === "/about") nextRoute = "about";
+      if (window.location.pathname === "/projects") nextRoute = "projects";
+      if (window.location.pathname === "/blog") nextRoute = "blog";
+      if (window.location.pathname === "/contact") nextRoute = "contact";
+      if (nextRoute !== "home") scrollToPageTop();
 
-      setRoute(nextRoute)
-      setPendingHash({ hash: window.location.hash, behavior: 'auto' })
-    }
+      setRoute(nextRoute);
+      setPendingHash({ hash: window.location.hash, behavior: "auto" });
+    };
 
-    window.addEventListener('popstate', onPopState)
-    return () => window.removeEventListener('popstate', onPopState)
-  }, [])
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   useEffect(() => {
-    if (route !== 'home') return
-    if (pendingHash === null) return
+    if (route !== "home") return;
+    if (pendingHash === null) return;
 
-    const hash = pendingHash.hash
+    const hash = pendingHash.hash;
 
     if (!hash) {
-      scrollToPageTop(pendingHash.behavior ?? 'smooth')
-      return
+      scrollToPageTop(pendingHash.behavior ?? "smooth");
+      return;
     }
 
     window.requestAnimationFrame(() => {
-      const target = document.querySelector(hash)
-      if (!target) return
+      const target = document.querySelector(hash);
+      if (!target) return;
 
-      const behavior = pendingHash.behavior ?? 'smooth'
-      if (behavior === 'auto') {
-        const previousScrollBehavior = document.documentElement.style.scrollBehavior
-        document.documentElement.style.scrollBehavior = 'auto'
-        target.scrollIntoView()
-        document.documentElement.style.scrollBehavior = previousScrollBehavior
-        return
+      const behavior = pendingHash.behavior ?? "smooth";
+      if (behavior === "auto") {
+        const previousScrollBehavior =
+          document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = "auto";
+        target.scrollIntoView();
+        document.documentElement.style.scrollBehavior = previousScrollBehavior;
+        return;
       }
 
-      target.scrollIntoView({ behavior })
-    })
-  }, [pendingHash, route])
+      target.scrollIntoView({ behavior });
+    });
+  }, [pendingHash, route]);
 
   useEffect(() => {
-    if (route !== 'home') return undefined
+    if (route !== "home") return undefined;
 
     const readProgress = (id, offset = 0) => {
-      const node = document.getElementById(id)
-      if (!node) return 0
-      const rect = node.getBoundingClientRect()
-      const total = rect.height + window.innerHeight
-      return clamp((window.innerHeight - rect.top + offset) / total)
-    }
+      const node = document.getElementById(id);
+      if (!node) return 0;
+      const rect = node.getBoundingClientRect();
+      const total = rect.height + window.innerHeight;
+      return clamp((window.innerHeight - rect.top + offset) / total);
+    };
 
     const readHeroProgress = () => {
-      const node = document.getElementById('home')
-      if (!node) return 0
-      const heroStart = node.offsetTop
-      const heroScrollable = Math.max(node.offsetHeight - window.innerHeight, 1)
-      return clamp((window.scrollY - heroStart) / heroScrollable)
-    }
+      const node = document.getElementById("home");
+      if (!node) return 0;
+      const heroStart = node.offsetTop;
+      const heroScrollable = Math.max(
+        node.offsetHeight - window.innerHeight,
+        1,
+      );
+      return clamp((window.scrollY - heroStart) / heroScrollable);
+    };
 
     const onScroll = () => {
-      const hero = readHeroProgress()
-      const intro = readProgress('about', 80)
-      const work = readProgress('experience', 100)
-      const stack = readProgress('stack', 120)
+      const hero = readHeroProgress();
+      const intro = readProgress("about", 80);
+      const work = readProgress("experience", 100);
+      const stack = readProgress("stack", 120);
 
       setScrollProgress({
         hero,
-      })
+      });
 
-      if (intro > 0.2) setIntroVisible(true)
-      if (work > 0.2) setWorkVisible(true)
-      if (stack > 0.2) setStackVisible(true)
+      if (intro > 0.2) setIntroVisible(true);
+      if (work > 0.2) setWorkVisible(true);
+      if (stack > 0.2) setStackVisible(true);
 
       if (hero < 0.42) {
-        setIntroVisible(false)
-        setWorkVisible(false)
-        setStackVisible(false)
+        setIntroVisible(false);
+        setWorkVisible(false);
+        setStackVisible(false);
       }
-    }
+    };
 
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-    }
-  }, [route])
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [route]);
 
-  const navigateToHomeSection = (hash = '') => (event) => {
-    event.preventDefault()
-    const nextPath = hash ? `/${hash}` : '/'
+  const navigateToHomeSection =
+    (hash = "") =>
+    (event) => {
+      event.preventDefault();
+      const nextPath = hash ? `/${hash}` : "/";
 
-    if (window.location.pathname !== '/' || window.location.hash !== hash) {
-      window.history.pushState({}, '', nextPath)
-    }
+      if (window.location.pathname !== "/" || window.location.hash !== hash) {
+        window.history.pushState({}, "", nextPath);
+      }
 
-    if (!hash) scrollToPageTop()
-    setRoute('home')
-    setPendingHash({ hash, behavior: 'smooth' })
-  }
+      if (!hash) scrollToPageTop();
+      setRoute("home");
+      setPendingHash({ hash, behavior: "smooth" });
+    };
 
   const navigateToAbout = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    if (window.location.pathname !== '/about') {
-      window.history.pushState({}, '', '/about')
+    if (window.location.pathname !== "/about") {
+      window.history.pushState({}, "", "/about");
     }
 
-    scrollToPageTop()
-    setRoute('about')
-    setPendingHash(null)
-  }
+    scrollToPageTop();
+    setRoute("about");
+    setPendingHash(null);
+  };
 
   const navigateToProjects = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    if (window.location.pathname !== '/projects' || window.location.hash) {
-      window.history.pushState({}, '', '/projects')
+    if (window.location.pathname !== "/projects" || window.location.hash) {
+      window.history.pushState({}, "", "/projects");
     }
 
-    scrollToPageTop()
-    setRoute('projects')
-    setPendingHash(null)
-  }
+    scrollToPageTop();
+    setRoute("projects");
+    setPendingHash(null);
+  };
 
   const navigateToProjectDetail = (hash) => (event) => {
-    event.preventDefault()
-    window.history.pushState({}, '', `/projects#${hash}`)
-    scrollToPageTop()
-    setRoute('projects')
-    setPendingHash(null)
-  }
+    event.preventDefault();
+    window.history.pushState({}, "", `/projects#${hash}`);
+    scrollToPageTop();
+    setRoute("projects");
+    setPendingHash(null);
+  };
 
   const navigateToContact = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    if (window.location.pathname !== '/contact') {
-      window.history.pushState({}, '', '/contact')
+    if (window.location.pathname !== "/contact") {
+      window.history.pushState({}, "", "/contact");
     }
 
-    scrollToPageTop()
-    setRoute('contact')
-    setPendingHash(null)
-  }
+    scrollToPageTop();
+    setRoute("contact");
+    setPendingHash(null);
+  };
 
   const navigateToBlog = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    if (window.location.pathname !== '/blog') {
-      window.history.pushState({}, '', '/blog')
+    if (window.location.pathname !== "/blog") {
+      window.history.pushState({}, "", "/blog");
     }
 
-    scrollToPageTop()
-    setRoute('blog')
-    setPendingHash(null)
-  }
+    scrollToPageTop();
+    setRoute("blog");
+    setPendingHash(null);
+  };
 
   const toggleTheme = () => {
-    setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'))
-  }
+    setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
+  };
 
-  const heroTextOpacity = clamp(1 - scrollProgress.hero / 0.35)
+  const heroTextOpacity = clamp(1 - scrollProgress.hero / 0.35);
   const heroImageOpacity =
     scrollProgress.hero < 0.2625
       ? 1
-      : clamp(1 - (scrollProgress.hero - 0.2625) / 0.17)
+      : clamp(1 - (scrollProgress.hero - 0.2625) / 0.17);
   const welcomeOpacity =
-    scrollProgress.hero < 0.48
-      ? 0
-      : clamp((scrollProgress.hero - 0.48) / 0.1)
+    scrollProgress.hero < 0.48 ? 0 : clamp((scrollProgress.hero - 0.48) / 0.1);
 
-  if (route === 'about') {
+  if (route === "about") {
     return (
       <AboutPage
         onHome={navigateToHomeSection()}
@@ -534,10 +569,10 @@ function App() {
         theme={theme}
         onThemeToggle={toggleTheme}
       />
-    )
+    );
   }
 
-  if (route === 'projects') {
+  if (route === "projects") {
     return (
       <ProjectsPage
         onHome={navigateToHomeSection()}
@@ -548,10 +583,10 @@ function App() {
         theme={theme}
         onThemeToggle={toggleTheme}
       />
-    )
+    );
   }
 
-  if (route === 'contact') {
+  if (route === "contact") {
     return (
       <ContactPage
         onHome={navigateToHomeSection()}
@@ -562,10 +597,10 @@ function App() {
         theme={theme}
         onThemeToggle={toggleTheme}
       />
-    )
+    );
   }
 
-  if (route === 'blog') {
+  if (route === "blog") {
     return (
       <Suspense fallback={<div className="route-loading">Loading blog...</div>}>
         <BlogPage
@@ -578,7 +613,7 @@ function App() {
           onThemeToggle={toggleTheme}
         />
       </Suspense>
-    )
+    );
   }
 
   return (
@@ -597,17 +632,30 @@ function App() {
             <span className="left-logo-home">Rodrigo.A</span>
             <div className="nav-actions">
               <nav>
-                <a href="/" onClick={navigateToHomeSection()}>Home</a>
-                <a href="/about" onClick={navigateToAbout}>About me</a>
-                <a href="/projects" onClick={navigateToProjects}>Projects</a>
-                <a href="/blog" onClick={navigateToBlog}>Blog</a>
-                <a href="/contact" onClick={navigateToContact}>Contact</a>
+                <a href="/" onClick={navigateToHomeSection()}>
+                  Home
+                </a>
+                <a href="/about" onClick={navigateToAbout}>
+                  About me
+                </a>
+                <a href="/projects" onClick={navigateToProjects}>
+                  Projects
+                </a>
+                <a href="/blog" onClick={navigateToBlog}>
+                  Blog
+                </a>
+                <a href="/contact" onClick={navigateToContact}>
+                  Contact
+                </a>
               </nav>
               <ThemeToggle theme={theme} onToggle={toggleTheme} />
             </div>
           </header>
 
-          <div className="hero-title-layer" style={{ opacity: heroTextOpacity }}>
+          <div
+            className="hero-title-layer"
+            style={{ opacity: heroTextOpacity }}
+          >
             <div className="hero-name-row">
               <div className="rectangle rectangle-1">
                 <div className="name-and-email">
@@ -636,21 +684,34 @@ function App() {
 
       <main className="background">
         <div className="content-shell">
-          <section id="about" className={`about-section ${introVisible ? 'is-visible' : ''}`}>
+          <section
+            id="about"
+            className={`about-section ${introVisible ? "is-visible" : ""}`}
+          >
             <div className="about-copy">
               <p className="intro-kicker from-left">I enjoy...</p>
               <h2 className="intro-statement">
-                <span className="intro-line from-right">building full stack applications and</span>
-                <span className="intro-line from-left">data driven systems, turning ideas</span>
-                <span className="intro-line from-right">into real working solutions.</span>
+                <span className="intro-line from-right">
+                  building full stack applications and
+                </span>
+                <span className="intro-line from-left">
+                  data driven systems, turning ideas
+                </span>
+                <span className="intro-line from-right">
+                  into real working solutions.
+                </span>
               </h2>
               <p className="intro-support from-left">
-                I move between product, mobile, backend, and robotics work, with a focus on clean interfaces and useful systems.
+                I move between product, mobile, backend, and robotics work, with
+                a focus on clean interfaces and useful systems.
               </p>
             </div>
           </section>
 
-          <section id="experience" className={`experience-wrapper ${workVisible ? 'is-visible' : ''}`}>
+          <section
+            id="experience"
+            className={`experience-wrapper ${workVisible ? "is-visible" : ""}`}
+          >
             <div className="experience-inner">
               <div className="experience-section-heading">
                 <p>Work & volunteer experience</p>
@@ -659,14 +720,16 @@ function App() {
 
               <div className="experience-showcase">
                 {featuredExperiences.map((experience, index) => {
-                  const mainMediaIndex = experience.id === 'unify' ? 1 : 0
-                  const mainMedia = experience.media[mainMediaIndex]
-                  const supportingMedia = experience.media.filter((_, mediaIndex) => mediaIndex !== mainMediaIndex)
+                  const mainMediaIndex = experience.id === "unify" ? 1 : 0;
+                  const mainMedia = experience.media[mainMediaIndex];
+                  const supportingMedia = experience.media.filter(
+                    (_, mediaIndex) => mediaIndex !== mainMediaIndex,
+                  );
 
                   return (
                     <article
                       key={experience.id}
-                      className={`experience-panel experience-panel-${experience.accent} ${index % 2 ? 'experience-panel-reverse' : ''}`}
+                      className={`experience-panel experience-panel-${experience.accent} ${index % 2 ? "experience-panel-reverse" : ""}`}
                     >
                       <div className="experience-media-cloud">
                         <OptionalExperienceImage
@@ -693,15 +756,24 @@ function App() {
 
                       <div className="experience-copy">
                         <div className="experience-company-row">
-                          <img src={experience.logo} alt={`${experience.company} logo`} loading="lazy" decoding="async" />
+                          <img
+                            src={experience.logo}
+                            alt={`${experience.company} logo`}
+                            loading="lazy"
+                            decoding="async"
+                          />
                           <div>
-                            <p className="experience-period">{experience.period} / {experience.location}</p>
+                            <p className="experience-period">
+                              {experience.period} / {experience.location}
+                            </p>
                             <h3>{experience.company}</h3>
                             <p className="experience-role">{experience.role}</p>
                           </div>
                         </div>
                         <h4>{experience.headline}</h4>
-                        <p className="experience-summary">{experience.summary}</p>
+                        <p className="experience-summary">
+                          {experience.summary}
+                        </p>
                         <ul className="experience-highlights">
                           {experience.highlights.map((highlight) => (
                             <li key={highlight}>{highlight}</li>
@@ -715,23 +787,29 @@ function App() {
                         <a
                           className="experience-cta"
                           href={`/projects#${experience.projectHash}`}
-                          onClick={navigateToProjectDetail(experience.projectHash)}
+                          onClick={navigateToProjectDetail(
+                            experience.projectHash,
+                          )}
                         >
                           Learn more about what I did
                           <span aria-hidden="true">-&gt;</span>
                         </a>
                       </div>
                     </article>
-                  )
+                  );
                 })}
 
                 <article className="volunteer-panel">
                   <div className="volunteer-story">
                     <div className="volunteer-intro">
                       <p className="experience-period">Community-facing work</p>
-                      <h3>Helping others learn, feel supported, and move forward.</h3>
+                      <h3>
+                        Helping others learn, feel supported, and move forward.
+                      </h3>
                       <p className="volunteer-intro-copy">
-                        A few certificates connected to that same mix of community work, data learning, leadership, and workplace readiness.
+                        A few certificates connected to that same mix of
+                        community work, data learning, leadership, and workplace
+                        readiness.
                       </p>
                       <a className="certificates-jump" href="#certificates">
                         Look at my certificates
@@ -740,10 +818,20 @@ function App() {
                     </div>
                     <div className="volunteer-grid">
                       {volunteerExperiences.map((experience) => (
-                        <article className="volunteer-card" key={experience.company}>
-                          <img src={experience.logo} alt={`${experience.company} logo`} loading="lazy" decoding="async" />
+                        <article
+                          className="volunteer-card"
+                          key={experience.company}
+                        >
+                          <img
+                            src={experience.logo}
+                            alt={`${experience.company} logo`}
+                            loading="lazy"
+                            decoding="async"
+                          />
                           <div>
-                            <p className="experience-period">{experience.period}</p>
+                            <p className="experience-period">
+                              {experience.period}
+                            </p>
                             <h3>{experience.company}</h3>
                             <h4>{experience.role}</h4>
                           </div>
@@ -753,14 +841,22 @@ function App() {
                     </div>
                   </div>
 
-                  <section id="certificates" className="certificates-section" aria-labelledby="certificates-heading">
+                  <section
+                    id="certificates"
+                    className="certificates-section"
+                    aria-labelledby="certificates-heading"
+                  >
                     <div className="certificates-header">
                       <div>
                         <p className="experience-period">Certificates</p>
-                        <h3 id="certificates-heading">Recent proof of practice.</h3>
+                        <h3 id="certificates-heading">
+                          Recent proof of practice.
+                        </h3>
                       </div>
                       <p>
-                        Small wins that show the learning behind the work: data analytics, leadership, and practical workplace preparation.
+                        Small wins that show the learning behind the work: data
+                        analytics, leadership, and practical workplace
+                        preparation.
                       </p>
                     </div>
 
@@ -775,13 +871,22 @@ function App() {
                           aria-label={`Open ${certificate.title} certificate`}
                         >
                           <figure className="certificate-preview">
-                            <img src={certificate.image} alt={`${certificate.title} certificate`} loading="lazy" decoding="async" />
+                            <img
+                              src={certificate.image}
+                              alt={`${certificate.title} certificate`}
+                              loading="lazy"
+                              decoding="async"
+                            />
                           </figure>
                           <div className="certificate-card-body">
-                            <p className="certificate-meta">{certificate.issuer} / {certificate.date}</p>
+                            <p className="certificate-meta">
+                              {certificate.issuer} / {certificate.date}
+                            </p>
                             <h4>{certificate.title}</h4>
                             <p>{certificate.description}</p>
-                            <span className="certificate-link-label">Open certificate -&gt;</span>
+                            <span className="certificate-link-label">
+                              Open certificate -&gt;
+                            </span>
                           </div>
                         </a>
                       ))}
@@ -792,7 +897,10 @@ function App() {
             </div>
           </section>
 
-          <section id="stack" className={`stack-section ${stackVisible ? 'is-visible' : ''}`}>
+          <section
+            id="stack"
+            className={`stack-section ${stackVisible ? "is-visible" : ""}`}
+          >
             <h2 className="stack-title">My Tech Stack</h2>
             <p className="stack-subtitle">Tools and technologies I work with</p>
 
@@ -800,19 +908,33 @@ function App() {
               <div className="stack-track stack-track-a">
                 {[...techTrackA, ...techTrackA].map((logo, index) => (
                   <div className="stack-pill" key={`${logo}-a-${index}`}>
-                    <img src={logo} alt="Technology logo" loading="lazy" decoding="async" />
+                    <img
+                      src={logo}
+                      alt="Technology logo"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                 ))}
               </div>
               <div className="stack-track stack-track-b">
                 {[...techTrackB, ...techTrackB].map((logo, index) => (
                   <div className="stack-pill" key={`${logo}-b-${index}`}>
-                    <img src={logo} alt="Technology logo" loading="lazy" decoding="async" />
+                    <img
+                      src={logo}
+                      alt="Technology logo"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                 ))}
               </div>
             </div>
-            <a className="stack-projects-teaser" href="/projects" onClick={navigateToProjects}>
+            <a
+              className="stack-projects-teaser"
+              href="/projects"
+              onClick={navigateToProjects}
+            >
               <span>Come see my projects</span>
               <span aria-hidden="true">&rarr;</span>
             </a>
@@ -823,25 +945,53 @@ function App() {
       <footer>
         <div className="footer-inner">
           <div className="footer-socials">
-            <a href="https://www.instagram.com/rodr_1201/" target="_blank" rel="noreferrer">
-              <img src={instagramLogo} alt="Instagram" loading="lazy" decoding="async" />
+            <a
+              href="https://www.instagram.com/rodr_1201/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={instagramLogo}
+                alt="Instagram"
+                loading="lazy"
+                decoding="async"
+              />
             </a>
-            <a href="https://www.linkedin.com/in/rodrigo-anasco/" target="_blank" rel="noreferrer">
-              <img src={linkedinLogo} alt="LinkedIn" loading="lazy" decoding="async" />
+            <a
+              href="https://www.linkedin.com/in/rodrigo-anasco/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={linkedinLogo}
+                alt="LinkedIn"
+                loading="lazy"
+                decoding="async"
+              />
             </a>
           </div>
           <nav className="footer-nav" aria-label="Footer navigation">
-            <a href="/" onClick={navigateToHomeSection()}>Home</a>
-            <a href="/about" onClick={navigateToAbout}>About me</a>
-            <a href="/projects" onClick={navigateToProjects}>Projects</a>
-            <a href="/blog" onClick={navigateToBlog}>Blog</a>
-            <a href="/contact" onClick={navigateToContact}>Contact</a>
+            <a href="/" onClick={navigateToHomeSection()}>
+              Home
+            </a>
+            <a href="/about" onClick={navigateToAbout}>
+              About me
+            </a>
+            <a href="/projects" onClick={navigateToProjects}>
+              Projects
+            </a>
+            <a href="/blog" onClick={navigateToBlog}>
+              Blog
+            </a>
+            <a href="/contact" onClick={navigateToContact}>
+              Contact
+            </a>
           </nav>
           <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
