@@ -265,7 +265,6 @@ function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThe
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
           <ThemeToggle theme={theme} onToggle={onThemeToggle} />
-          <button ref={authorButton} className="blog-button blog-author-button" aria-haspopup="dialog" onClick={() => setAuthor(true)}>Author sign-in</button>
         </div>
       </header>
 
@@ -278,6 +277,7 @@ function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThe
               Thoughts, project notes, and things I’m learning along the way.
             </p>
           </div>
+          <button ref={authorButton} className="blog-button blog-author-button" aria-haspopup="dialog" onClick={() => setAuthor(true)}>Author sign-in</button>
         </section>
 
         <BlogPosts refresh={refresh} />

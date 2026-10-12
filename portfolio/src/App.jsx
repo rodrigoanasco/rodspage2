@@ -98,7 +98,6 @@ function App() {
       : null,
   );
   const [theme, setTheme] = useState(getInitialTheme);
-  const [introVisible, setIntroVisible] = useState(false);
   const [workVisible, setWorkVisible] = useState(false);
   const [stackVisible, setStackVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState({
@@ -447,20 +446,17 @@ function App() {
 
     const onScroll = () => {
       const hero = readHeroProgress();
-      const intro = readProgress("about", 80);
-      const work = readProgress("experience", 100);
+      const workTop = document.getElementById("experience")?.getBoundingClientRect().top;
       const stack = readProgress("stack", 120);
 
       setScrollProgress({
         hero,
       });
 
-      if (intro > 0.2) setIntroVisible(true);
-      if (work > 0.2) setWorkVisible(true);
+      if (workTop < window.innerHeight * 0.9) setWorkVisible(true);
       if (stack > 0.2) setStackVisible(true);
 
       if (hero < 0.42) {
-        setIntroVisible(false);
         setWorkVisible(false);
         setStackVisible(false);
       }
@@ -629,7 +625,9 @@ function App() {
             fetchPriority="high"
           />
           <header className="top-nav">
-            <span className="left-logo-home">Rodrigo.A</span>
+            <a className="left-logo-home" href="/" onClick={navigateToHomeSection()}>
+              Rodrigo.A
+            </a>
             <div className="nav-actions">
               <nav>
                 <a href="/" onClick={navigateToHomeSection()}>
@@ -684,74 +682,35 @@ function App() {
 
       <main className="background">
         <div className="content-shell">
-          <section
-            id="about"
-            className={`about-section ${introVisible ? "is-visible" : ""}`}
-          >
-            <div className="about-copy">
-              <p className="intro-kicker from-left">I enjoy...</p>
-              <h2 className="intro-statement">
-                <span className="intro-line from-right">
-                  building full stack applications and
-                </span>
-                <span className="intro-line from-left">
-                  data driven systems, turning ideas
-                </span>
-                <span className="intro-line from-right">
-                  into real working solutions.
-                </span>
-              </h2>
-              <p className="intro-support from-left">
-                I move between product, mobile, backend, and robotics work, with
-                a focus on clean interfaces and useful systems.
-              </p>
-            </div>
-          </section>
-
-          <section
-            id="experience"
+          <div
             className={`experience-wrapper ${workVisible ? "is-visible" : ""}`}
           >
             <div className="experience-inner">
-              <div className="experience-section-heading">
-                <p>Work & volunteer experience</p>
-                <h2>Building with people, products, and machines.</h2>
-              </div>
+              <section id="experience" aria-labelledby="work-heading">
+                <div className="experience-section-heading">
+                  <h2 id="work-heading">Past Work Experience</h2>
+                </div>
 
-              <div className="experience-showcase">
-                {featuredExperiences.map((experience, index) => {
-                  const mainMediaIndex = experience.id === "unify" ? 1 : 0;
-                  const mainMedia = experience.media[mainMediaIndex];
-                  const supportingMedia = experience.media.filter(
-                    (_, mediaIndex) => mediaIndex !== mainMediaIndex,
-                  );
-
-                  return (
+                <div className="experience-showcase">
+                  {featuredExperiences.map((experience, index) => (
                     <article
                       key={experience.id}
                       className={`experience-panel experience-panel-${experience.accent} ${index % 2 ? "experience-panel-reverse" : ""}`}
                     >
-                      <div className="experience-media-cloud">
-                        <OptionalExperienceImage
-                          src={mainMedia.src}
-                          fallback={mainMedia.fallback}
-                          alt={mainMedia.alt}
-                          label={mainMedia.label}
-                          className={`${mainMedia.className} experience-media-main`}
-                        />
-
-                        <div className="experience-media-strip">
-                          {supportingMedia.map((item) => (
-                            <OptionalExperienceImage
-                              key={`${experience.id}-${item.label}`}
-                              src={item.src}
-                              fallback={item.fallback}
-                              alt={item.alt}
-                              label={item.label}
-                              className={`${item.className} experience-media-thumb`}
-                            />
-                          ))}
-                        </div>
+                      <div
+                        className={`experience-collage experience-collage-${experience.id}`}
+                        aria-label={`${experience.company} photos`}
+                      >
+                        {experience.media.map((item, mediaIndex) => (
+                          <OptionalExperienceImage
+                            key={item.src}
+                            src={item.src}
+                            fallback={item.fallback}
+                            alt={item.alt}
+                            label={item.label}
+                            className={`collage-photo collage-photo-${mediaIndex} ${item.className}`}
+                          />
+                        ))}
                       </div>
 
                       <div className="experience-copy">
@@ -771,131 +730,95 @@ function App() {
                           </div>
                         </div>
                         <h4>{experience.headline}</h4>
-                        <p className="experience-summary">
-                          {experience.summary}
-                        </p>
+                        <p className="experience-summary">{experience.summary}</p>
                         <ul className="experience-highlights">
                           {experience.highlights.map((highlight) => (
                             <li key={highlight}>{highlight}</li>
                           ))}
                         </ul>
-                        <div className="experience-facts">
-                          {experience.facts.map((fact) => (
-                            <span key={fact}>{fact}</span>
-                          ))}
-                        </div>
                         <a
                           className="experience-cta"
                           href={`/projects#${experience.projectHash}`}
-                          onClick={navigateToProjectDetail(
-                            experience.projectHash,
-                          )}
+                          onClick={navigateToProjectDetail(experience.projectHash)}
                         >
-                          Learn more about what I did
+                          View project
                           <span aria-hidden="true">-&gt;</span>
                         </a>
                       </div>
                     </article>
-                  );
-                })}
+                  ))}
+                </div>
+              </section>
 
-                <article className="volunteer-panel">
-                  <div className="volunteer-story">
-                    <div className="volunteer-intro">
-                      <p className="experience-period">Community-facing work</p>
-                      <h3>
-                        Helping others learn, feel supported, and move forward.
-                      </h3>
-                      <p className="volunteer-intro-copy">
-                        A few certificates connected to that same mix of
-                        community work, data learning, leadership, and workplace
-                        readiness.
-                      </p>
-                      <a className="certificates-jump" href="#certificates">
-                        Look at my certificates
-                        <span aria-hidden="true">-&gt;</span>
-                      </a>
-                    </div>
-                    <div className="volunteer-grid">
-                      {volunteerExperiences.map((experience) => (
-                        <article
-                          className="volunteer-card"
-                          key={experience.company}
-                        >
-                          <img
-                            src={experience.logo}
-                            alt={`${experience.company} logo`}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                          <div>
-                            <p className="experience-period">
-                              {experience.period}
-                            </p>
-                            <h3>{experience.company}</h3>
-                            <h4>{experience.role}</h4>
-                          </div>
-                          <p>{experience.description}</p>
-                        </article>
-                      ))}
-                    </div>
-                  </div>
-
-                  <section
-                    id="certificates"
-                    className="certificates-section"
-                    aria-labelledby="certificates-heading"
-                  >
-                    <div className="certificates-header">
+              <section
+                id="volunteering"
+                className="volunteer-panel"
+                aria-labelledby="volunteering-heading"
+              >
+                <div className="experience-section-heading">
+                  <h2 id="volunteering-heading">Volunteering Experience</h2>
+                </div>
+                <div className="volunteer-grid">
+                  {volunteerExperiences.map((experience) => (
+                    <article className="volunteer-card" key={experience.company}>
+                      <img
+                        src={experience.logo}
+                        alt={`${experience.company} logo`}
+                        loading="lazy"
+                        decoding="async"
+                      />
                       <div>
-                        <p className="experience-period">Certificates</p>
-                        <h3 id="certificates-heading">
-                          Recent proof of practice.
-                        </h3>
+                        <p className="experience-period">{experience.period}</p>
+                        <h3>{experience.company}</h3>
+                        <h4>{experience.role}</h4>
                       </div>
-                      <p>
-                        Small wins that show the learning behind the work: data
-                        analytics, leadership, and practical workplace
-                        preparation.
-                      </p>
-                    </div>
+                      <p>{experience.description}</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
 
-                    <div className="certificate-gallery">
-                      {certificateItems.map((certificate) => (
-                        <a
-                          className="certificate-card"
-                          href={certificate.href}
-                          target="_blank"
-                          rel="noreferrer"
-                          key={certificate.title}
-                          aria-label={`Open ${certificate.title} certificate`}
-                        >
-                          <figure className="certificate-preview">
-                            <img
-                              src={certificate.image}
-                              alt={`${certificate.title} certificate`}
-                              loading="lazy"
-                              decoding="async"
-                            />
-                          </figure>
-                          <div className="certificate-card-body">
-                            <p className="certificate-meta">
-                              {certificate.issuer} / {certificate.date}
-                            </p>
-                            <h4>{certificate.title}</h4>
-                            <p>{certificate.description}</p>
-                            <span className="certificate-link-label">
-                              Open certificate -&gt;
-                            </span>
-                          </div>
-                        </a>
-                      ))}
-                    </div>
-                  </section>
-                </article>
-              </div>
+              <section
+                id="certificates"
+                className="certificates-section"
+                aria-labelledby="certificates-heading"
+              >
+                <div className="experience-section-heading">
+                  <h2 id="certificates-heading">Certificates</h2>
+                </div>
+                <div className="certificate-gallery">
+                  {certificateItems.map((certificate) => (
+                    <a
+                      className="certificate-card"
+                      href={certificate.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      key={certificate.title}
+                      aria-label={`Open ${certificate.title} certificate`}
+                    >
+                      <figure className="certificate-preview">
+                        <img
+                          src={certificate.image}
+                          alt={`${certificate.title} certificate`}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </figure>
+                      <div className="certificate-card-body">
+                        <p className="certificate-meta">
+                          {certificate.issuer} / {certificate.date}
+                        </p>
+                        <h3>{certificate.title}</h3>
+                        <span className="certificate-link-label">
+                          Open certificate -&gt;
+                        </span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </section>
             </div>
-          </section>
+          </div>
 
           <section
             id="stack"

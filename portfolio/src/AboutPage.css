@@ -5,16 +5,6 @@
   overflow-x: hidden;
 }
 
-.about-page .about-top-nav {
-  position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
-  width: min(1180px, calc(100% - 64px));
-  margin: 0 auto;
-  padding: 32px 0 0;
-}
-
 .about-page .about-top-nav .left-logo-home,
 .about-page .about-top-nav a {
   color: var(--text-main);
@@ -360,8 +350,7 @@
 }
 
 @media (max-width: 1050px) {
-  .about-main,
-  .about-page .about-top-nav {
+  .about-main {
     width: calc(100% - 36px);
   }
 
@@ -389,26 +378,6 @@
 }
 
 @media (max-width: 720px) {
-  .about-page .about-top-nav {
-    display: grid;
-    gap: 14px;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .about-page .about-top-nav nav {
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .about-page .about-top-nav .nav-actions {
-    justify-content: center;
-  }
-
-  .about-page .about-top-nav a {
-    font-size: 12px;
-  }
 
   .about-main {
     width: calc(100% - 24px);
