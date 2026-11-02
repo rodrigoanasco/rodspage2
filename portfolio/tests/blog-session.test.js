@@ -9,9 +9,18 @@ test('manager authorization distinguishes MFA enrollment from wrong identity', a
   process.env.BLOG_MANAGER_EMAIL = 'owner@example.com'
   process.env.BLOG_AUTHORIZED_ORIGINS = 'https://example.com'
   process.env.BLOG_REQUIRE_MFA = 'true'
-  t.after(() => { process.env = original })
+  t.after(() => {
+    process.env = original
+  })
 
-  const run = async ({ email = 'owner@example.com', verified = true, mfa = true, token = true, invalid = false, method = 'GET' } = {}) => {
+  const run = async ({
+    email = 'owner@example.com',
+    verified = true,
+    mfa = true,
+    token = true,
+    invalid = false,
+    method = 'GET',
+  } = {}) => {
     let lookedUp = false
     const handler = createSessionHandler({
       verify: async (_token, options) => {
@@ -19,14 +28,40 @@ test('manager authorization distinguishes MFA enrollment from wrong identity', a
         if (invalid) throw new Error('Invalid token')
         return { sub: 'user_owner' }
       },
-      createClient: () => ({ users: { getUser: async (id) => {
-        lookedUp = true
-        assert.equal(id, 'user_owner')
-        return { primaryEmailAddress: { emailAddress: email, verification: { status: verified ? 'verified' : 'unverified' } }, twoFactorEnabled: mfa }
-      } } }),
+      createClient: () => ({
+        users: {
+          getUser: async (id) => {
+            lookedUp = true
+            assert.equal(id, 'user_owner')
+            return {
+              primaryEmailAddress: {
+                emailAddress: email,
+                verification: { status: verified ? 'verified' : 'unverified' },
+              },
+              twoFactorEnabled: mfa,
+            }
+          },
+        },
+      }),
     })
-    const response = { headers: {}, setHeader(k, v) { this.headers[k] = v }, status(value) { this.statusCode = value; return this }, json(body) { this.body = body; return this } }
-    await handler({ method, headers: token ? { authorization: 'Bearer test-token' } : {} }, response)
+    const response = {
+      headers: {},
+      setHeader(k, v) {
+        this.headers[k] = v
+      },
+      status(value) {
+        this.statusCode = value
+        return this
+      },
+      json(body) {
+        this.body = body
+        return this
+      },
+    }
+    await handler(
+      { method, headers: token ? { authorization: 'Bearer test-token' } : {} },
+      response,
+    )
     assert.equal(response.headers['Cache-Control'], 'no-store, max-age=0')
     return { ...response, lookedUp }
   }
@@ -35,7 +70,10 @@ test('manager authorization distinguishes MFA enrollment from wrong identity', a
   const mfa = await run({ mfa: false })
   assert.equal(mfa.statusCode, 403)
   assert.equal(mfa.body.code, 'MFA_REQUIRED')
-  assert.equal((await run({ email: 'visitor@example.com', mfa: false })).body.code, 'MANAGER_REQUIRED')
+  assert.equal(
+    (await run({ email: 'visitor@example.com', mfa: false })).body.code,
+    'MANAGER_REQUIRED',
+  )
   assert.equal((await run({ verified: false })).body.code, 'MANAGER_REQUIRED')
   assert.equal((await run({ token: false })).statusCode, 401)
   assert.equal((await run({ invalid: true })).lookedUp, false)

@@ -14,7 +14,9 @@
 
 .contact-page .contact-top-nav nav a {
   color: var(--nav-link);
-  transition: color 180ms ease, transform 180ms ease;
+  transition:
+    color 180ms ease,
+    transform 180ms ease;
 }
 
 .contact-page .contact-top-nav nav a:hover,
@@ -54,7 +56,6 @@
 }
 
 @media (max-width: 720px) {
-
   .contact-page-main {
     padding-top: 48px;
   }

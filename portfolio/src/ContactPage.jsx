@@ -1,59 +1,40 @@
-import { useEffect } from 'react'
-import ContactSection from './ContactSection'
-import instagramLogo from './assets/images/tech_stack/instagram 1.png'
-import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
-import ThemeToggle from './ThemeToggle'
-import LegalLinks from './LegalLinks'
+import ContactSection from './components/contact/ContactSection'
+import SiteHeader from './components/layout/SiteHeader'
+import SiteFooter from './components/layout/SiteFooter'
+import useScrollToTop from './hooks/useScrollToTop'
 import './ContactPage.css'
 
-function ContactPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThemeToggle }) {
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+export default function ContactPage({
+  onHome,
+  onAbout,
+  onProjects,
+  onBlog,
+  onContact,
+  theme,
+  onThemeToggle,
+}) {
+  useScrollToTop()
+  const navigation = {
+    home: onHome,
+    about: onAbout,
+    projects: onProjects,
+    blog: onBlog,
+    contact: onContact,
+  }
 
   return (
     <div className="contact-page">
-      <header className="top-nav contact-top-nav">
-        <a className="left-logo-home contact-logo-link" href="/" onClick={onHome}>Rodrigo.A</a>
-        <div className="nav-actions">
-          <nav aria-label="Main navigation">
-            <a href="/" onClick={onHome}>Home</a>
-            <a href="/about" onClick={onAbout}>About me</a>
-            <a href="/projects" onClick={onProjects}>Projects</a>
-            <a href="/blog" onClick={onBlog}>Blog</a>
-            <a className="is-active" href="/contact" onClick={onContact}>Contact</a>
-          </nav>
-          <ThemeToggle theme={theme} onToggle={onThemeToggle} />
-        </div>
-      </header>
-
+      <SiteHeader
+        variant="contact"
+        activePage="contact"
+        navigation={navigation}
+        theme={theme}
+        onThemeToggle={onThemeToggle}
+      />
       <main className="contact-page-main">
         <ContactSection isVisible />
       </main>
-
-      <footer className="contact-footer">
-        <div className="footer-inner">
-          <div className="footer-socials">
-            <a href="https://www.instagram.com/rodr_1201/" target="_blank" rel="noreferrer">
-              <img src={instagramLogo} alt="Instagram" loading="lazy" decoding="async" />
-            </a>
-            <a href="https://www.linkedin.com/in/rodrigo-anasco/" target="_blank" rel="noreferrer">
-              <img src={linkedinLogo} alt="LinkedIn" loading="lazy" decoding="async" />
-            </a>
-          </div>
-          <nav className="footer-nav" aria-label="Footer navigation">
-            <a href="/" onClick={onHome}>Home</a>
-            <a href="/about" onClick={onAbout}>About me</a>
-            <a href="/projects" onClick={onProjects}>Projects</a>
-            <a href="/blog" onClick={onBlog}>Blog</a>
-            <a href="/contact" onClick={onContact}>Contact</a>
-          </nav>
-          <LegalLinks />
-          <p>&copy; {new Date().getFullYear()} Rodrigo Anasco. All rights reserved</p>
-        </div>
-      </footer>
+      <SiteFooter variant="contact" navigation={navigation} />
     </div>
   )
 }
-
-export default ContactPage

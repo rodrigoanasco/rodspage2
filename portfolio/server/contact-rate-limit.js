@@ -4,7 +4,12 @@ export const CONTACT_WINDOW_MS = 15 * 60 * 1000
 
 // Per-instance abuse control only: no raw addresses, bounded storage, fixed expiry.
 // A distributed limiter is still needed for coordination across serverless instances.
-export function createContactLimiter({ now = Date.now, maxEntries = 10000, maxRequests = 5, windowMs = CONTACT_WINDOW_MS } = {}) {
+export function createContactLimiter({
+  now = Date.now,
+  maxEntries = 10000,
+  maxRequests = 5,
+  windowMs = CONTACT_WINDOW_MS,
+} = {}) {
   const secret = randomBytes(32)
   const buckets = new Map()
   return (ip) => {

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.playwright-cli/
+.impeccable/
+.refactor-verification/
+package-lock.json
+public/
+src/assets/

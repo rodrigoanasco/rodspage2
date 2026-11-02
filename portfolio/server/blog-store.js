@@ -2,7 +2,8 @@ import process from 'node:process'
 import { neon } from '@neondatabase/serverless'
 
 export function getBlogStore() {
-  if (!process.env.DATABASE_URL) throw Object.assign(new Error('Storage not connected'), { code: 'STORAGE_NOT_CONFIGURED' })
+  if (!process.env.DATABASE_URL)
+    throw Object.assign(new Error('Storage not connected'), { code: 'STORAGE_NOT_CONFIGURED' })
   const sql = neon(process.env.DATABASE_URL)
   return {
     async initialize() {

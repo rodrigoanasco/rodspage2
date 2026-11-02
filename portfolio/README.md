@@ -1,5 +1,7 @@
 # React + Vite
 
+For component ownership, reusable layout, content modules, state hooks and extension guidance, see [ARCHITECTURE.md](docs/ARCHITECTURE.md). Run `npm run format` to apply the shared code style or `npm run format:check` to verify it. Runtime dependencies and the existing design remain unchanged by the component refactor.
+
 ## Blog manager authentication setup
 
 The `/blog` page is public, but its manager workspace uses Clerk. The browser gets a short-lived Clerk session token and sends it to `/api/blog/session`; that serverless function verifies the token signature, fetches the user from Clerk, requires a verified primary email matching `BLOG_MANAGER_EMAIL`, and requires MFA by default. Future create, edit, upload, and moderation endpoints must call the same server-side authorization logic rather than trusting the UI.

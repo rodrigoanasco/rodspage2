@@ -4,13 +4,16 @@ This project is my personal portfolio, built to present projects, work and volun
 
 The app is a React single page application powered by Vite. It uses lightweight custom CSS instead of a component framework, with hand-built page layouts, dark/light mode, media-rich project cards, and a contact form powered by EmailJS.
 
+See [the architecture guide](portfolio/docs/ARCHITECTURE.md) for reusable components, content ownership, hooks, and how to extend the application.
+
 ## Tech Stack
 
 - **React 19** for UI components and page state.
 - **Vite 8** for local development, bundling, and production builds.
 - **Custom CSS** split by page through files such as `App.css`, `AboutPage.css`, and `ProjectsPage.css`.
-- **EmailJS** through `@emailjs/browser` for the contact form.
+- **EmailJS** through the server-side contact API, with Cloudflare Turnstile and explicit privacy acknowledgement.
 - **ESLint 9** for code quality checks.
+- **Prettier** for consistent source formatting.
 - **Clerk** for Blog-only identity sessions with server-side manager authorization.
 - **Vercel** for deployment.
 
@@ -48,8 +51,10 @@ rodspage2/
         |-- ContactPage.css
         |-- BlogPage.jsx
         |-- BlogPage.css
-        |-- ContactSection.jsx
-        |-- ThemeToggle.jsx
+        |-- components/          # Shared layout and feature components
+        |-- data/                # Portfolio content and navigation definitions
+        |-- hooks/               # Reusable state and browser behavior
+        |-- lib/                 # Pure helpers
         |-- main.jsx
         |-- index.css
         `-- assets/
@@ -65,14 +70,16 @@ rodspage2/
 
 ## Key Files
 
-- `portfolio/src/App.jsx`: Home page, custom routing, theme state, landing hero, experience section, tech stack, and footer.
-- `portfolio/src/ThemeToggle.jsx`: Reusable dark/light mode toggle.
+- `portfolio/src/App.jsx`: Small application composition layer connecting route, theme, scroll hooks, and page entry points.
+- `portfolio/src/components/home/`: The original landing hero, experience collages, volunteer cards, certificates, and technology sections.
+- `portfolio/src/data/`: Static portfolio content and navigation definitions.
+- `portfolio/src/components/layout/ThemeToggle.jsx`: Reusable dark/light mode toggle.
 - `portfolio/src/AboutPage.jsx`: About page content, personal gallery, values, and hobbies.
 - `portfolio/src/ProjectsPage.jsx`: Project list, lazy-loaded project videos, case study cards, and stock report download.
 - `portfolio/src/ContactPage.jsx`: Contact page wrapper and page footer.
 - `portfolio/src/BlogPage.jsx`: Public Blog landing page and manager-only Clerk session UI.
 - `portfolio/api/blog/session.js`: Server-side token, verified-email, and MFA authorization check.
-- `portfolio/src/ContactSection.jsx`: Contact form and EmailJS submission logic.
+- `portfolio/src/components/contact/ContactSection.jsx`: Contact section composition; form behavior lives in `hooks/useContactForm.js`.
 - `portfolio/src/App.css`: Global theme variables, shared nav/footer styles, home page sections, contact form styles, and responsive rules.
 
 ## Getting Started
