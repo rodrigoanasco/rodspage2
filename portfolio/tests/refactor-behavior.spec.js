@@ -4,8 +4,10 @@ test('shared navigation preserves browser history and the selected theme', async
   await page.route('**/api/blog/posts*', (route) =>
     route.fulfill({ json: { posts: [], hasMore: false } }),
   )
+  await page.addInitScript(() => localStorage.setItem('theme', 'light'))
   await page.goto('/about')
-  await page.getByRole('button', { name: 'Switch to light mode' }).click()
+  await expect(page.getByRole('button', { name: /Switch to .* mode/ })).toHaveCount(0)
+  await expect(page.getByRole('link', { name: 'Home', exact: true })).toHaveCount(0)
   for (const [label, path, heading] of [
     ['Projects', '/projects', 'Projects'],
     ['Blog', '/blog', 'Blog'],
@@ -32,6 +34,14 @@ test('shared navigation preserves browser history and the selected theme', async
   await page.reload()
   await expect(page.getByRole('button', { name: 'Switch to dark mode' })).toBeVisible()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await page
+    .getByRole('navigation', { name: 'Main navigation' })
+    .getByRole('link', { name: 'About me', exact: true })
+    .click()
+  await expect(page.getByRole('heading', { name: 'About me', level: 1, exact: true })).toBeVisible()
+  await page.locator('header .left-logo-home').click()
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByRole('heading', { name: 'Rodrigo Añasco', level: 1 })).toBeVisible()
 })
 
 test('public blog preserves error recovery, safe content expansion, and pagination', async ({

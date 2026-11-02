@@ -16,7 +16,13 @@ export default function HomeHero({ navigation, theme, onThemeToggle, presentatio
           decoding="async"
           fetchPriority="high"
         />
-        <SiteHeader navigation={navigation} theme={theme} onThemeToggle={onThemeToggle} />
+        <SiteHeader
+          navigation={navigation}
+          theme={theme}
+          onThemeToggle={onThemeToggle}
+          showHomeLink={false}
+          showThemeToggle={false}
+        />
 
         <div className="hero-title-layer" style={{ opacity: heroTextOpacity }}>
           <div className="hero-name-row">

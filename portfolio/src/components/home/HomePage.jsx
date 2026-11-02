@@ -45,7 +45,7 @@ export default function HomePage({
           />
         </div>
       </main>
-      <SiteFooter navigation={navigation} />
+      <SiteFooter navigation={navigation} showHomeLink={false} />
     </div>
   )
 }
