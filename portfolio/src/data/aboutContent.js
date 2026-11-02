@@ -13,41 +13,92 @@ import aboutPeruFlag from '../assets/images/about_me_images/peru_flag.png'
 import aboutTableTennisImage from '../assets/images/about_me_images/table_tennis.png'
 import aboutTryingThingsImage from '../assets/images/about_me_images/trying_new_things.jpg'
 
-export const aboutValues = [
-  {
-    label: 'Product-minded',
-    text: 'I like building things that are clear, useful, and easy for people to understand.',
-  },
-  {
-    label: 'Systems-driven',
-    text: 'I enjoy the logic behind software: data flow, structure, performance, and clean implementation.',
-  },
-  {
-    label: 'Curious by default',
-    text: 'I move between mobile, backend, data, AI, and robotics because I like connecting ideas across domains.',
-  },
-]
-
 export const personalGallery = [
-  { src: aboutLynnParkImage, alt: 'Lynn Canyon park forest view', label: 'hikes' },
-  { src: aboutCevicheImage, alt: 'Ceviche dish', label: 'food' },
-  { src: aboutBurnabyMountainImage, alt: 'Burnaby Mountain Park view', label: 'weekend walks' },
-  { src: aboutTryingThingsImage, alt: 'Trying something new', label: 'trying things' },
+  {
+    src: aboutLynnParkImage,
+    alt: 'Lynn Canyon park forest view',
+    label: 'Lynn Canyon',
+    width: 3788,
+    height: 5806,
+  },
+  { src: aboutCevicheImage, alt: 'Ceviche dish', label: 'Ceviche', width: 2160, height: 3840 },
+  {
+    src: aboutBurnabyMountainImage,
+    alt: 'Burnaby Mountain Park view',
+    label: 'Burnaby Mountain',
+    width: 3024,
+    height: 4032,
+  },
 ]
 
 export const aboutHobbies = [
-  { src: aboutPlaneImage, alt: 'Traveling', label: 'Traveling' },
-  { src: aboutEatingSunImage, alt: 'The beach', label: 'The beach' },
-  { src: aboutSnowImage, alt: 'The snow', label: 'The snow' },
-  { src: aboutJiuJitsuImage, alt: 'Jiu-Jitsu', label: 'Jiu-Jitsu' },
-  { src: aboutTableTennisImage, alt: 'Table Tennis', label: 'Table Tennis' },
-  { src: aboutDogImage, alt: 'My Dog', label: 'My Dog' },
+  {
+    src: aboutPlaneImage,
+    alt: 'An airplane on the airport apron',
+    label: 'Traveling',
+    width: 3024,
+    height: 4032,
+  },
+  {
+    src: aboutEatingSunImage,
+    alt: 'Rodrigo at the beach at sunset',
+    label: 'The beach',
+    width: 3024,
+    height: 4032,
+  },
+  { src: aboutSnowImage, alt: 'Rodrigo in the snow', label: 'The snow', width: 3447, height: 4596 },
+  {
+    src: aboutTryingThingsImage,
+    alt: 'Rodrigo and friends with surfboards at the beach',
+    label: 'Trying something new',
+    width: 1334,
+    height: 750,
+  },
+  {
+    src: aboutJiuJitsuImage,
+    alt: 'Jiu-jitsu training',
+    label: 'Jiu-jitsu',
+    width: 3879,
+    height: 2921,
+  },
+  {
+    src: aboutTableTennisImage,
+    alt: 'Playing table tennis',
+    label: 'Table tennis',
+    width: 1528,
+    height: 2037,
+  },
+  {
+    src: aboutDogImage,
+    alt: 'Rodrigo with his dog Cooper',
+    label: 'Cooper',
+    width: 3024,
+    height: 4032,
+  },
 ]
 
 export const aboutPortraits = {
-  main: waterfrontPortraitImage,
-  study: studyImage,
-  project: objectRecognitionPreviewImage,
+  main: {
+    src: waterfrontPortraitImage,
+    alt: 'Rodrigo near the waterfront in Victoria',
+    label: 'Victoria, BC',
+    width: 3022,
+    height: 3757,
+  },
+  study: {
+    src: studyImage,
+    alt: 'Laptop and lecture screen during a computer science class',
+    label: 'At SFU',
+    width: 1170,
+    height: 2044,
+  },
+  project: {
+    src: objectRecognitionPreviewImage,
+    alt: 'Object recognition project preview',
+    label: 'A project in progress',
+    width: 2160,
+    height: 3840,
+  },
 }
 
 export { aboutPeruFlag }

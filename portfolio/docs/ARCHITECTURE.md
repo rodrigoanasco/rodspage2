@@ -46,6 +46,8 @@ Page entry points stay at `src/*Page.jsx` so route composition is easy to find. 
 
 Content records use named properties rather than positional arrays where appropriate. Never put credentials, private inquiries, provider configuration secrets, or unpublished blog data in these browser modules.
 
+The About page is a continuous personal article. `AboutIntroduction`, `AboutWorkNotes`, `AboutPersonalSection`, and `AboutHobbiesSection` compose first-person paragraphs, plain topic headings, and contextual photo spreads. Desktop work photos sit beside the writing; narrower screens place them below it. `AboutPhoto` owns image dimensions, accessible descriptions, loading priority, and plain captions; `AboutPhotoGallery` lays out photo records. Keep copy specific; avoid reintroducing numbered goal cards, personality cards, or decorative section labels. All 13 photos and the Peru flag remain in the page, with the surfing photo grouped with the hobbies.
+
 ## Reusing views
 
 `SiteHeader` and `SiteFooter` are the single implementations used by the five main public pages. Their `variant` retains each page's CSS classes, and `navigation` maps route names to the application's existing navigation handlers. `SiteNavigation` owns link ordering; `LegalLinks` also serves the policy-to-policy navigation through its `className` prop.
