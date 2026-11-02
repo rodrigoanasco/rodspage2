@@ -3,7 +3,6 @@ import AboutPage from "./AboutPage";
 import ContactPage from "./ContactPage";
 import ProjectsPage from "./ProjectsPage";
 import ThemeToggle from "./ThemeToggle";
-import ExperienceChapters from "./ExperienceChapters";
 import LegalLinks from "./LegalLinks";
 import useMediaQuery from "./useMediaQuery";
 import landingImage from "./assets/images/landing_page_image.png";
@@ -80,6 +79,31 @@ const getInitialTheme = () => {
     return "dark";
   }
 };
+
+function OptionalExperienceImage({
+  src,
+  fallback,
+  alt,
+  label,
+  className = "",
+  style,
+}) {
+  const [failed, setFailed] = useState(false);
+  const imageSource = failed ? fallback : src;
+
+  return (
+    <figure className={`experience-image-card ${className}`} style={style}>
+      <img
+        src={imageSource}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        onError={() => setFailed(true)}
+      />
+      <figcaption>{label}</figcaption>
+    </figure>
+  );
+}
 
 function App() {
   const [route, setRoute] = useState(getRoute);
@@ -241,7 +265,6 @@ function App() {
   const volunteerExperiences = useMemo(
     () => [
       {
-        id: "yres",
         period: "Mar 2026 - Present",
         company: "York Region Educational Services",
         role: "Data Analytics & Web Design",
@@ -250,7 +273,6 @@ function App() {
         logo: yresLogo,
       },
       {
-        id: "fic",
         period: "Aug 2023 - Apr 2024",
         company: "Fraser International College",
         role: "Peer Educator",
@@ -682,17 +704,95 @@ function App() {
           >
             <div className="experience-inner">
               <section id="experience" aria-labelledby="work-heading">
-                <div className="chapter-section-opening">
-                  <h2 id="work-heading">Experience</h2>
+                <div className="experience-section-heading">
+                  <h2 id="work-heading">Past Work Experience</h2>
                 </div>
-                <ExperienceChapters experiences={featuredExperiences} onProjectClick={navigateToProjectDetail} />
+
+                <div className="experience-showcase">
+                  {featuredExperiences.map((experience, index) => (
+                    <article
+                      key={experience.id}
+                      className={`experience-panel experience-panel-${experience.accent} ${index % 2 ? "experience-panel-reverse" : ""}`}
+                    >
+                      <div
+                        className={`experience-collage experience-collage-${experience.id}`}
+                        aria-label={`${experience.company} photos`}
+                      >
+                        {experience.media.map((item, mediaIndex) => (
+                          <OptionalExperienceImage
+                            key={item.src}
+                            src={item.src}
+                            fallback={item.fallback}
+                            alt={item.alt}
+                            label={item.label}
+                            className={`collage-photo collage-photo-${mediaIndex} ${item.className}`}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="experience-copy">
+                        <div className="experience-company-row">
+                          <img
+                            src={experience.logo}
+                            alt={`${experience.company} logo`}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <div>
+                            <p className="experience-period">
+                              {experience.period} / {experience.location}
+                            </p>
+                            <h3>{experience.company}</h3>
+                            <p className="experience-role">{experience.role}</p>
+                          </div>
+                        </div>
+                        <h4>{experience.headline}</h4>
+                        <p className="experience-summary">{experience.summary}</p>
+                        <ul className="experience-highlights">
+                          {experience.highlights.map((highlight) => (
+                            <li key={highlight}>{highlight}</li>
+                          ))}
+                        </ul>
+                        <a
+                          className="experience-cta"
+                          href={`/projects#${experience.projectHash}`}
+                          onClick={navigateToProjectDetail(experience.projectHash)}
+                        >
+                          View project
+                          <span aria-hidden="true">-&gt;</span>
+                        </a>
+                      </div>
+                    </article>
+                  ))}
+                </div>
               </section>
 
-              <section id="volunteering" className="volunteer-panel" aria-labelledby="volunteering-heading">
-                <div className="chapter-section-opening">
-                  <h2 id="volunteering-heading">Volunteer experience</h2>
+              <section
+                id="volunteering"
+                className="volunteer-panel"
+                aria-labelledby="volunteering-heading"
+              >
+                <div className="experience-section-heading">
+                  <h2 id="volunteering-heading">Volunteering Experience</h2>
                 </div>
-                <ExperienceChapters experiences={volunteerExperiences} volunteer />
+                <div className="volunteer-grid">
+                  {volunteerExperiences.map((experience) => (
+                    <article className="volunteer-card" key={experience.company}>
+                      <img
+                        src={experience.logo}
+                        alt={`${experience.company} logo`}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div>
+                        <p className="experience-period">{experience.period}</p>
+                        <h3>{experience.company}</h3>
+                        <h4>{experience.role}</h4>
+                      </div>
+                      <p>{experience.description}</p>
+                    </article>
+                  ))}
+                </div>
               </section>
 
               <section
