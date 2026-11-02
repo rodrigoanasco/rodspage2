@@ -3,25 +3,37 @@ import AboutPhotoGallery from './AboutPhotoGallery'
 
 export default function AboutPersonalSection({ photos = personalGallery }) {
   return (
-    <section className="about-personal about-reveal">
-      <div className="about-personal-copy">
-        <p className="about-eyebrow">A personal side</p>
-        <h2>Peru, Canada, and finding my rhythm here.</h2>
+    <section className="about-entry-section about-personal" aria-labelledby="about-personal-title">
+      <div className="about-section-copy">
+        <h2 id="about-personal-title">A little about where I&apos;m from</h2>
         <p>
-          I moved to Canada in the summer of 2022 and quickly fell in love with Vancouver. The city
-          has this calm mix of mountains, ocean, and movement that keeps me grounded.
+          One of my favorite things about living in British Columbia is having mountains, forests,
+          and the ocean so close together. There&apos;s almost always somewhere new to explore, even
+          if it&apos;s just a trail or a place with a nice view.
         </p>
         <p>
-          I am from Peru, and that is still a big part of me: family, food, culture, and the way I
-          think about community. I like carrying both places with me.
+          At the same time, Peru will always be a big part of who I am. I miss the food (especially
+          ceviche), the culture, and the feeling of being back home.{' '}
+          <img
+            className="about-inline-flag"
+            src={aboutPeruFlag}
+            alt="Peru flag"
+            width="24"
+            height="16"
+            loading="lazy"
+            decoding="async"
+          />
         </p>
-        <div className="about-peru-chip">
-          <img src={aboutPeruFlag} alt="Peru flag" loading="lazy" decoding="async" />
-          <span>Peru</span>
-        </div>
+        <p>
+          Living between two countries has definitely shaped how I see the world, and it&apos;s
+          something I appreciate more as time goes on.
+        </p>
       </div>
-
-      <AboutPhotoGallery className="about-gallery" photos={photos} />
+      <AboutPhotoGallery
+        className="about-places"
+        label="Photos from life outside university"
+        photos={photos}
+      />
     </section>
   )
 }

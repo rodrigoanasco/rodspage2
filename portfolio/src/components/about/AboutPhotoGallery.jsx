@@ -1,11 +1,10 @@
-export default function AboutPhotoGallery({ className, photos }) {
+import AboutPhoto from './AboutPhoto'
+
+export default function AboutPhotoGallery({ className, photos, label }) {
   return (
-    <div className={className}>
-      {photos.map(({ src, alt, label }) => (
-        <figure key={label}>
-          <img src={src} alt={alt} loading="lazy" decoding="async" />
-          <figcaption>{label}</figcaption>
-        </figure>
+    <div className={`about-photo-spread ${className}`} role="group" aria-label={label}>
+      {photos.map((photo) => (
+        <AboutPhoto key={photo.src} photo={photo} />
       ))}
     </div>
   )
