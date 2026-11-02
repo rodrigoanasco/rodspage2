@@ -33,6 +33,8 @@ export default function AboutPage({
         navigation={navigation}
         theme={theme}
         onThemeToggle={onThemeToggle}
+        showHomeLink={false}
+        showThemeToggle={false}
       />
       <main id="about-content" className="about-main">
         <article className="about-journal" aria-labelledby="about-title">
@@ -63,7 +65,7 @@ export default function AboutPage({
           </div>
         </article>
       </main>
-      <SiteFooter variant="about" navigation={navigation} />
+      <SiteFooter variant="about" navigation={navigation} showHomeLink={false} />
     </div>
   )
 }

@@ -8,6 +8,8 @@ export default function SiteHeader({
   navigation = {},
   theme,
   onThemeToggle,
+  showHomeLink = true,
+  showThemeToggle = true,
   children,
 }) {
   const isHome = variant === 'home'
@@ -22,8 +24,12 @@ export default function SiteHeader({
         {siteIdentity.brand}
       </a>
       <div className="nav-actions">
-        <SiteNavigation navigation={navigation} activePage={activePage} />
-        <ThemeToggle theme={theme} onToggle={onThemeToggle} />
+        <SiteNavigation
+          navigation={navigation}
+          activePage={activePage}
+          showHomeLink={showHomeLink}
+        />
+        {showThemeToggle && <ThemeToggle theme={theme} onToggle={onThemeToggle} />}
         {children}
       </div>
     </header>
