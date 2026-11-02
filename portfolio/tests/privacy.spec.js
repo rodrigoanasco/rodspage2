@@ -8,10 +8,14 @@ const policies = [
 ]
 
 test.beforeEach(async ({ page }) => {
-  await page.route('**/api/blog/posts*', (route) => route.fulfill({ json: { posts: [], hasMore: false } }))
+  await page.route('**/api/blog/posts*', (route) =>
+    route.fulfill({ json: { posts: [], hasMore: false } }),
+  )
 })
 
-test('policy URLs render directly, survive reload, and support browser back', async ({ page }, testInfo) => {
+test('policy URLs render directly, survive reload, and support browser back', async ({
+  page,
+}, testInfo) => {
   const errors = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.setViewportSize({ width: 320, height: 760 })
@@ -21,15 +25,24 @@ test('policy URLs render directly, survive reload, and support browser back', as
     await expect(page).toHaveTitle(`${heading} | Rodrigo Anasco`)
     await page.reload()
     await expect(page.getByRole('heading', { level: 1, name: heading, exact: true })).toBeVisible()
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy()
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+    ).toBeTruthy()
   }
   await page.goto('/privacy')
-  await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy', exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Privacy Policy', exact: true }),
+  ).toBeVisible()
   await page.screenshot({ path: testInfo.outputPath('privacy-mobile.png'), fullPage: true })
-  await page.getByRole('navigation', { name: 'Legal policies' }).getByRole('link', { name: 'Terms', exact: true }).click()
+  await page
+    .getByRole('navigation', { name: 'Legal policies' })
+    .getByRole('link', { name: 'Terms', exact: true })
+    .click()
   await expect(page).toHaveURL(/\/terms$/)
   await page.goBack()
-  await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy', exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Privacy Policy', exact: true }),
+  ).toBeVisible()
   expect(errors).toEqual([])
 })
 
@@ -43,12 +56,17 @@ test('every public main route exposes all four policy links in its footer', asyn
     }
   }
   await page.locator('footer a[href="/privacy"]').click()
-  await expect(page.getByRole('heading', { level: 1, name: 'Privacy Policy', exact: true })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { level: 1, name: 'Privacy Policy', exact: true }),
+  ).toBeVisible()
 })
 
-test('passive public browsing does not request remote fonts, Turnstile, or Clerk services', async ({ page }) => {
+test('passive public browsing does not request remote fonts, Turnstile, or Clerk services', async ({
+  page,
+}) => {
   const requests = []
-  const forbidden = /fonts\.(googleapis|gstatic)\.com|challenges\.cloudflare\.com|(?:clerk\.accounts|clerk\.(?:com|dev))|clerk\.browser\.js/i
+  const forbidden =
+    /fonts\.(googleapis|gstatic)\.com|challenges\.cloudflare\.com|(?:clerk\.accounts|clerk\.(?:com|dev))|clerk\.browser\.js/i
   page.on('request', (request) => {
     if (forbidden.test(request.url())) requests.push(request.url())
   })
@@ -58,19 +76,25 @@ test('passive public browsing does not request remote fonts, Turnstile, or Clerk
     await expect(page.locator('main')).toBeVisible()
     await page.evaluate(() => document.fonts.ready)
     // Let page effects and lazy routes settle without initiating feature providers.
-    await expect(page.locator('script[src*="turnstile"], script[src*="clerk.browser"]')).toHaveCount(0)
+    await expect(
+      page.locator('script[src*="turnstile"], script[src*="clerk.browser"]'),
+    ).toHaveCount(0)
   }
   expect(requests).toEqual([])
 })
 
-test('contact acknowledgement gates challenge, revocation clears token, and optional-name submission includes consent', async ({ page }, testInfo) => {
+test('contact acknowledgement gates challenge, revocation clears token, and optional-name submission includes consent', async ({
+  page,
+}, testInfo) => {
   let providerLoads = 0
   let submitted
   const errors = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.route('https://challenges.cloudflare.com/turnstile/v0/api.js*', async (route) => {
     providerLoads++
-    await route.fulfill({ contentType: 'application/javascript', body: `
+    await route.fulfill({
+      contentType: 'application/javascript',
+      body: `
       window.mockChallenge = { renders: 0, removes: 0, resets: 0 };
       const widgets = new Map();
       window.turnstile = {
@@ -89,7 +113,8 @@ test('contact acknowledgement gates challenge, revocation clears token, and opti
       };
       const callback = new URL(document.currentScript.src).searchParams.get('onload');
       window[callback]?.();
-    ` })
+    `,
+    })
   })
   await page.route('**/api/contact', async (route) => {
     submitted = route.request().postDataJSON()
@@ -120,10 +145,18 @@ test('contact acknowledgement gates challenge, revocation clears token, and opti
   await expect(send).toBeDisabled()
   await page.getByRole('button', { name: 'Complete mocked anti-spam' }).click()
   await expect(send).toBeEnabled()
-  await page.screenshot({ path: testInfo.outputPath('contact-consent-desktop.png'), fullPage: true })
+  await page.screenshot({
+    path: testInfo.outputPath('contact-consent-desktop.png'),
+    fullPage: true,
+  })
   await send.click()
   await expect(page.getByRole('status')).toContainText('Message sent.')
-  expect(submitted).toMatchObject({ name: '', privacyConsent: true, email: 'visitor@example.test', message: 'A mocked privacy test inquiry.' })
+  expect(submitted).toMatchObject({
+    name: '',
+    privacyConsent: true,
+    email: 'visitor@example.test',
+    message: 'A mocked privacy test inquiry.',
+  })
   expect(submitted.turnstileToken).toMatch(/^mock-\d+-token$/)
   await expect(consent).not.toBeChecked()
   await expect(send).toBeDisabled()
