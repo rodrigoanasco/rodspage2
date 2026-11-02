@@ -84,9 +84,7 @@ test('About inline links keep the existing client-side navigation and theme', as
     .getByRole('link', { name: 'projects page' })
     .click()
   await expect(page).toHaveURL(/\/projects$/)
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'Projects that turn ideas into working systems.',
-  )
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Projects')
   await page.goBack()
   await expect(page.getByRole('heading', { level: 1, name: 'About me' })).toBeVisible()
   await page.getByRole('link', { name: 'reach out' }).click()

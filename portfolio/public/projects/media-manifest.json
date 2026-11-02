@@ -1,0 +1,89 @@
+[
+  {
+    "id": "unify",
+    "source": "unify.mp4",
+    "kind": "video",
+    "width": 333,
+    "height": 720,
+    "duration": 14.483333,
+    "bytes": 19762
+  },
+  {
+    "id": "unify-process",
+    "source": "unify_previous.mp4",
+    "kind": "video",
+    "width": 960,
+    "height": 540,
+    "duration": 5.333333,
+    "bytes": 40702
+  },
+  {
+    "id": "learnverse",
+    "source": "learnverse.mp4",
+    "kind": "video",
+    "width": 960,
+    "height": 540,
+    "duration": 6.485,
+    "bytes": 17282
+  },
+  {
+    "id": "subvision",
+    "source": "pathplanning.mp4",
+    "kind": "video",
+    "width": 960,
+    "height": 540,
+    "duration": 20.97,
+    "bytes": 31740
+  },
+  {
+    "id": "bleet",
+    "source": "bLeet _ nwHacks 2026 _ Grind Blender Smarter.mp4",
+    "kind": "video",
+    "width": 960,
+    "height": 540,
+    "duration": 105.228005,
+    "bytes": 31720
+  },
+  {
+    "id": "panoramizer",
+    "source": "panoramizer.mp4",
+    "kind": "video",
+    "width": 960,
+    "height": 540,
+    "duration": 7.733333,
+    "bytes": 59954
+  },
+  {
+    "id": "hungry-doug",
+    "source": "hungry_doug_demo.mp4",
+    "kind": "video",
+    "width": 960,
+    "height": 540,
+    "duration": 53.289,
+    "bytes": 64842
+  },
+  {
+    "id": "learnverse-team",
+    "source": "GDSC_us_winners.jpg",
+    "kind": "photo",
+    "width": 960,
+    "height": 720,
+    "bytes": 70504
+  },
+  {
+    "id": "competition-day",
+    "source": "GDSC_all_group.jpg",
+    "kind": "photo",
+    "width": 960,
+    "height": 720,
+    "bytes": 93130
+  },
+  {
+    "id": "sfu-award",
+    "source": "SFU_CS_AWARD.jpeg",
+    "kind": "photo",
+    "width": 480,
+    "height": 720,
+    "bytes": 32294
+  }
+]
