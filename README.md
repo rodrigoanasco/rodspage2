@@ -1,6 +1,6 @@
-# Rodrigo Anasco Portfolio
+# My Portfolio
 
-A personal portfolio website for Rodrigo Anasco, built to present projects, work and volunteer experience, technical skills, personal background, and contact information in a polished responsive interface.
+This project is my personal portfolio, built to present projects, work and volunteer experience, technical skills, personal background, and contact information in a polished responsive interface.
 
 The app is a React single page application powered by Vite. It uses lightweight custom CSS instead of a component framework, with hand-built page layouts, dark/light mode, media-rich project cards, and a contact form powered by EmailJS.
 
