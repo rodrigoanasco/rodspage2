@@ -215,6 +215,12 @@
   max-width: 70ch;
 }
 @media (min-width: 721px) {
+  .project-case {
+    align-items: center;
+  }
+  .project-case > .project-media {
+    padding-top: 0;
+  }
   .project-case:nth-child(even) {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
   }
