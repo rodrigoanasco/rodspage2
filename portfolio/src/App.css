@@ -2000,7 +2000,7 @@ footer p {
   }
 }
 
-/* Keep policy links readable alongside the existing footer navigation. */
+/* Keep policies accessible as a secondary footer row. */
 footer:has(.footer-legal) {
   height: auto;
   min-height: 104px;
@@ -2009,22 +2009,34 @@ footer:has(.footer-legal) {
 footer .footer-inner:has(.footer-legal) {
   height: auto;
   flex-wrap: wrap;
-  gap: 16px 24px;
+  gap: 8px 24px;
 }
 .footer-legal {
+  order: 4;
+  flex: 0 0 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px 20px;
+  justify-content: flex-end;
+  gap: 4px 12px;
 }
 .footer-legal a {
-  color: #fff;
+  color: #9da8a2;
   font:
-    400 13px/1.5 'Inter',
+    400 12px/1.5 'Inter',
     sans-serif;
+  padding: 4px 6px;
+  text-decoration: none;
   text-underline-offset: 3px;
 }
+.footer-legal a:hover,
+.footer-legal a:focus-visible {
+  color: #f3f0e8;
+  text-decoration: underline;
+}
 @media (max-width: 900px) {
+  .footer-legal {
+    justify-content: center;
+  }
   footer .footer-inner:has(.footer-legal) {
     justify-content: center;
     width: min(100%, 680px);
