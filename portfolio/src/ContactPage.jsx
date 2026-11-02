@@ -3,6 +3,7 @@ import ContactSection from './ContactSection'
 import instagramLogo from './assets/images/tech_stack/instagram 1.png'
 import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
 import ThemeToggle from './ThemeToggle'
+import LegalLinks from './LegalLinks'
 import './ContactPage.css'
 
 function ContactPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThemeToggle }) {
@@ -15,7 +16,7 @@ function ContactPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, on
       <header className="top-nav contact-top-nav">
         <a className="left-logo-home contact-logo-link" href="/" onClick={onHome}>Rodrigo.A</a>
         <div className="nav-actions">
-          <nav>
+          <nav aria-label="Main navigation">
             <a href="/" onClick={onHome}>Home</a>
             <a href="/about" onClick={onAbout}>About me</a>
             <a href="/projects" onClick={onProjects}>Projects</a>
@@ -47,7 +48,8 @@ function ContactPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, on
             <a href="/blog" onClick={onBlog}>Blog</a>
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
-          <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
+          <LegalLinks />
+          <p>&copy; {new Date().getFullYear()} Rodrigo Anasco. All rights reserved</p>
         </div>
       </footer>
     </div>

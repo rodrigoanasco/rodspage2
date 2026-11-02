@@ -3,6 +3,8 @@ import AboutPage from "./AboutPage";
 import ContactPage from "./ContactPage";
 import ProjectsPage from "./ProjectsPage";
 import ThemeToggle from "./ThemeToggle";
+import LegalLinks from "./LegalLinks";
+import useMediaQuery from "./useMediaQuery";
 import landingImage from "./assets/images/landing_page_image.png";
 import unifyLogo from "./assets/images/experience/unify_logo.png";
 import subvisionLogo from "./assets/images/experience/subvision_logo.png";
@@ -44,6 +46,25 @@ import matplotlibLogo from "./assets/images/tech_stack/matplotlib-original.svg";
 import "./App.css";
 
 const BlogPage = lazy(() => import("./BlogPage"));
+const LegalPage = lazy(() => import("./LegalPage"));
+const legalRoutes = ["privacy", "terms", "cookies", "refunds"];
+const getRoute = () => {
+  const path = window.location.pathname.replace(/\/$/, "").slice(1);
+  return ["about", "projects", "blog", "contact", ...legalRoutes].includes(path) ? path : "home";
+};
+
+const technologyNames = new Map([
+  [cLogo, 'C'], [cPlusPlusLogo, 'C++'], [cssLogo, 'CSS'], [dockerLogo, 'Docker'],
+  [firebaseLogo, 'Firebase'], [githubLogo, 'GitHub'], [javaLogo, 'Java'],
+  [javascriptLogo, 'JavaScript'], [kaggleLogo, 'Kaggle'], [latexLogo, 'LaTeX'],
+  [linuxLogo, 'Linux'], [mysqlLogo, 'MySQL'], [nodeLogo, 'Node.js'],
+  [numpyLogo, 'NumPy'], [pandasLogo, 'pandas'], [postgresLogo, 'PostgreSQL'],
+  [awsLogo, 'Amazon Web Services'], [pythonLogo, 'Python'], [reactLogo, 'React'],
+  [slackLogo, 'Slack'], [pytorchLogo, 'PyTorch'], [openapiLogo, 'OpenAPI'],
+  [opencvLogo, 'OpenCV'], [bashLogo, 'Bash'], [vscodeLogo, 'Visual Studio Code'],
+  [jupyterLogo, 'Jupyter'], [cmakeLogo, 'CMake'], [androidStudioLogo, 'Android Studio'],
+  [supabaseLogo, 'Supabase'], [matplotlibLogo, 'Matplotlib'], [tailwindLogo, 'Tailwind CSS'],
+]);
 
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 const scrollToPageTop = (behavior = "auto") => {
@@ -85,13 +106,8 @@ function OptionalExperienceImage({
 }
 
 function App() {
-  const [route, setRoute] = useState(() => {
-    if (window.location.pathname === "/about") return "about";
-    if (window.location.pathname === "/projects") return "projects";
-    if (window.location.pathname === "/blog") return "blog";
-    if (window.location.pathname === "/contact") return "contact";
-    return "home";
-  });
+  const [route, setRoute] = useState(getRoute);
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   const [pendingHash, setPendingHash] = useState(() =>
     window.location.hash
       ? { hash: window.location.hash, behavior: "auto" }
@@ -378,11 +394,7 @@ function App() {
 
   useEffect(() => {
     const onPopState = () => {
-      let nextRoute = "home";
-      if (window.location.pathname === "/about") nextRoute = "about";
-      if (window.location.pathname === "/projects") nextRoute = "projects";
-      if (window.location.pathname === "/blog") nextRoute = "blog";
-      if (window.location.pathname === "/contact") nextRoute = "contact";
+      const nextRoute = getRoute();
       if (nextRoute !== "home") scrollToPageTop();
 
       setRoute(nextRoute);
@@ -546,13 +558,17 @@ function App() {
     setTheme((currentTheme) => (currentTheme === "dark" ? "light" : "dark"));
   };
 
-  const heroTextOpacity = clamp(1 - scrollProgress.hero / 0.35);
+  const heroTextOpacity = reducedMotion ? 1 : clamp(1 - scrollProgress.hero / 0.35);
   const heroImageOpacity =
     scrollProgress.hero < 0.2625
       ? 1
       : clamp(1 - (scrollProgress.hero - 0.2625) / 0.17);
   const welcomeOpacity =
     scrollProgress.hero < 0.48 ? 0 : clamp((scrollProgress.hero - 0.48) / 0.1);
+
+  if (legalRoutes.includes(route)) {
+    return <Suspense fallback={<div className="route-loading">Loading policy...</div>}><LegalPage type={route} /></Suspense>;
+  }
 
   if (route === "about") {
     return (
@@ -614,6 +630,7 @@ function App() {
 
   return (
     <div className="page">
+      <a className="skip-link" href="#main-content">Skip to content</a>
       <section id="home" className="hero-section">
         <div className="hero-sticky">
           <img
@@ -629,7 +646,7 @@ function App() {
               Rodrigo.A
             </a>
             <div className="nav-actions">
-              <nav>
+              <nav aria-label="Main navigation">
                 <a href="/" onClick={navigateToHomeSection()}>
                   Home
                 </a>
@@ -657,13 +674,13 @@ function App() {
             <div className="hero-name-row">
               <div className="rectangle rectangle-1">
                 <div className="name-and-email">
-                  <h1 className="rodrigo">Rodrigo</h1>
+                  <h1 className="rodrigo" aria-label={'Rodrigo A\u00f1asco'}>Rodrigo</h1>
                   <p className="hero-email">ro.anasco.s@gmail.com</p>
                 </div>
               </div>
               <div className="rectangle rectangle-2">
                 <div className="name-text-wrap">
-                  <h1 className="anasco">Añasco</h1>
+                  <p className="anasco" aria-hidden="true">Añasco</p>
                 </div>
               </div>
             </div>
@@ -680,7 +697,7 @@ function App() {
         </div>
       </section>
 
-      <main className="background">
+      <main id="main-content" tabIndex="-1" className="background">
         <div className="content-shell">
           <div
             className={`experience-wrapper ${workVisible ? "is-visible" : ""}`}
@@ -833,7 +850,7 @@ function App() {
                   <div className="stack-pill" key={`${logo}-a-${index}`}>
                     <img
                       src={logo}
-                      alt="Technology logo"
+                      alt={`${technologyNames.get(logo)} logo`}
                       loading="lazy"
                       decoding="async"
                     />
@@ -845,7 +862,7 @@ function App() {
                   <div className="stack-pill" key={`${logo}-b-${index}`}>
                     <img
                       src={logo}
-                      alt="Technology logo"
+                      alt={`${technologyNames.get(logo)} logo`}
                       loading="lazy"
                       decoding="async"
                     />
@@ -910,7 +927,8 @@ function App() {
               Contact
             </a>
           </nav>
-          <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
+          <LegalLinks />
+          <p>&copy; {new Date().getFullYear()} Rodrigo Anasco. All rights reserved</p>
         </div>
       </footer>
     </div>

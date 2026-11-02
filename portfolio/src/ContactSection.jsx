@@ -6,6 +6,7 @@ const initialForm = {
   email: '',
   message: '',
   website: '',
+  privacyConsent: false,
 }
 
 function ContactSection({ isVisible }) {
@@ -19,14 +20,25 @@ function ContactSection({ isVisible }) {
   const handleChange = ({ target }) => {
     setForm((currentForm) => ({
       ...currentForm,
-      [target.name]: target.value,
+      [target.name]: target.type === 'checkbox' ? target.checked : target.value,
     }))
+
+    if (target.name === 'privacyConsent' && !target.checked) {
+      setTurnstileToken('')
+      turnstileRef.current?.reset()
+    }
 
     if (status) setStatus(null)
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+
+    if (loading) return
+    if (!form.privacyConsent) {
+      setStatus({ type: 'error', message: 'Please acknowledge the privacy notice before sending.' })
+      return
+    }
 
     if (!turnstileToken) {
       setStatus({ type: 'error', message: 'Please complete the anti-spam check.' })
@@ -83,8 +95,8 @@ function ContactSection({ isVisible }) {
           </div>
           <div className="contact-form-body">
             <label>
-              <span>Full name</span>
-              <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Your name" autoComplete="name" minLength="2" maxLength="100" required />
+              <span>Name (optional)</span>
+              <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Your name" autoComplete="name" maxLength="100" disabled={loading} />
             </label>
 
             <label>
@@ -102,7 +114,13 @@ function ContactSection({ isVisible }) {
               <input name="website" value={form.website} onChange={handleChange} tabIndex="-1" autoComplete="off" />
             </label>
 
-            {turnstileSiteKey ? (
+            <p className="contact-privacy-note">Your email, message, and optional name are delivered through EmailJS so I can reply. After acknowledgement, Cloudflare processes technical signals for the anti-spam check. Please avoid sending sensitive or confidential information.</p>
+            <label className="contact-privacy-consent">
+              <input type="checkbox" name="privacyConsent" checked={form.privacyConsent} onChange={handleChange} required disabled={loading} />
+              <span>I have read the <a href="/privacy" target="_blank" rel="noreferrer">Privacy Policy</a> and understand how my inquiry is handled. The anti-spam check loads after I acknowledge this notice.</span>
+            </label>
+
+            {turnstileSiteKey && form.privacyConsent ? (
               <Turnstile
                 ref={turnstileRef}
                 siteKey={turnstileSiteKey}
@@ -117,13 +135,13 @@ function ContactSection({ isVisible }) {
                 }}
                 options={{ action: 'contact', theme: 'auto', size: 'flexible' }}
               />
-            ) : (
+            ) : !turnstileSiteKey ? (
               <p className="contact-status contact-status--error" role="status">
                 The contact form is not configured yet.
               </p>
-            )}
+            ) : null}
 
-            <button type="submit" disabled={loading}>
+            <button type="submit" disabled={loading || !form.privacyConsent || !turnstileSiteKey || !turnstileToken}>
               {loading ? 'Sending...' : 'Send message'}
               <span aria-hidden="true">-&gt;</span>
             </button>

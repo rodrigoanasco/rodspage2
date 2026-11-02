@@ -13,9 +13,12 @@ import stockReportPdf from './assets/videos/CMPT353_Project_Report_TERP-1.pdf'
 import instagramLogo from './assets/images/tech_stack/instagram 1.png'
 import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
 import ThemeToggle from './ThemeToggle'
+import LegalLinks from './LegalLinks'
+import useMediaQuery from './useMediaQuery'
 import './ProjectsPage.css'
 
 function ProjectVideo({ src, title, variant = 'wide' }) {
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
   const shellRef = useRef(null)
   const [shouldLoad, setShouldLoad] = useState(
     () => typeof window !== 'undefined' && !('IntersectionObserver' in window),
@@ -50,7 +53,7 @@ function ProjectVideo({ src, title, variant = 'wide' }) {
       <video
         src={shouldLoad ? src : undefined}
         title={title}
-        autoPlay={shouldLoad}
+        autoPlay={shouldLoad && !reducedMotion}
         muted
         loop
         playsInline
@@ -199,7 +202,7 @@ function ProjectsPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, o
       <header className="top-nav projects-top-nav">
         <a className="left-logo-home projects-logo-link" href="/" onClick={onHome}>Rodrigo.A</a>
         <div className="nav-actions">
-          <nav>
+          <nav aria-label="Main navigation">
             <a href="/" onClick={onHome}>Home</a>
             <a href="/about" onClick={onAbout}>About me</a>
             <a className="is-active" href="/projects" onClick={onProjects}>Projects</a>
@@ -330,7 +333,8 @@ function ProjectsPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, o
             <a href="/blog" onClick={onBlog}>Blog</a>
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
-          <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
+          <LegalLinks />
+          <p>&copy; {new Date().getFullYear()} Rodrigo Anasco. All rights reserved</p>
         </div>
       </footer>
     </div>
