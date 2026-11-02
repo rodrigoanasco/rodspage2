@@ -7,7 +7,7 @@ test('shared navigation preserves browser history and the selected theme', async
   await page.goto('/about')
   await page.getByRole('button', { name: 'Switch to light mode' }).click()
   for (const [label, path, heading] of [
-    ['Projects', '/projects', 'Projects that turn ideas into working systems.'],
+    ['Projects', '/projects', 'Projects'],
     ['Blog', '/blog', 'Blog'],
     ['Contact', '/contact', "Let's build something useful."],
   ]) {

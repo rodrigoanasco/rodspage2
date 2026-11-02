@@ -4,9 +4,8 @@ import SiteFooter from './components/layout/SiteFooter'
 import ProjectsHero from './components/projects/ProjectsHero'
 import ProjectCard from './components/projects/ProjectCard'
 import ProjectReportSection from './components/projects/ProjectReportSection'
+import ResearchProject from './components/projects/ResearchProject'
 import { projects } from './data/projectContent'
-import useScrollToTop from './hooks/useScrollToTop'
-import useRevealOnScroll from './hooks/useRevealOnScroll'
 import './ProjectsPage.css'
 
 export default function ProjectsPage({
@@ -25,17 +24,14 @@ export default function ProjectsPage({
     blog: onBlog,
     contact: onContact,
   }
-  useScrollToTop()
-  useRevealOnScroll('.projects-reveal', 0.15)
-
   useEffect(() => {
     const hash = window.location.hash.slice(1)
-    if (hash) {
-      window.requestAnimationFrame(() => {
-        const target = document.getElementById(hash)
-        if (target) target.scrollIntoView({ block: 'start' })
-      })
-    }
+    const frame = window.requestAnimationFrame(() => {
+      const target = hash && document.getElementById(hash)
+      if (target) target.scrollIntoView({ block: 'start', behavior: 'instant' })
+      else window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+    })
+    return () => window.cancelAnimationFrame(frame)
   }, [])
 
   return (
@@ -49,9 +45,10 @@ export default function ProjectsPage({
       />
       <main className="projects-main">
         <ProjectsHero />
+        <ResearchProject />
         <section className="projects-list" aria-label="Project case studies">
-          {projects.map((project, index) => (
-            <ProjectCard key={project.name} project={project} index={index} />
+          {projects.map((project) => (
+            <ProjectCard key={project.slug} project={project} />
           ))}
         </section>
         <ProjectReportSection />

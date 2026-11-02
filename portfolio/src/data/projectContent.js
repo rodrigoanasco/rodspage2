@@ -1,6 +1,3 @@
-import gdscGroupImage from '../assets/images/projects_images/GDSC_all_group.jpg'
-import gdscWinnersImage from '../assets/images/projects_images/GDSC_us_winners.jpg'
-import sfuAwardImage from '../assets/images/projects_images/SFU_CS_AWARD.jpeg'
 import bleetVideo from '../assets/videos/project_videos/bLeet _ nwHacks 2026 _ Grind Blender Smarter.mp4'
 import hungryDougVideo from '../assets/videos/project_videos/hungry_doug_demo.mp4'
 import learnverseVideo from '../assets/videos/project_videos/learnverse.mp4'
@@ -12,15 +9,15 @@ import stockReportPdf from '../assets/videos/CMPT353_Project_Report_TERP-1.pdf'
 
 export const projects = [
   {
-    name: 'Unify',
-    slug: 'unify',
+    name: 'Unify Social',
+    slug: 'unify social',
     type: 'Mobile product',
     year: '2025',
     summary:
       'A production React Native app helping newcomers in Canada access guidance, personalized checklists, learning modules, resources, and community support.',
     video: unifyVideo,
+    poster: '/projects/unify.webp',
     videoVariant: 'phone',
-    cardVariant: 'phone-video',
     tags: ['React Native', 'TypeScript', 'Supabase', 'Sanity CMS', 'Resend'],
     points: [
       'Translated Figma flows into responsive mobile UI for onboarding, learning, and resource discovery.',
@@ -29,8 +26,9 @@ export const projects = [
     ],
     processVideo: {
       src: unifyPreviousVideo,
+      poster: '/projects/unify-process.webp',
       label: 'Development process',
-      title: 'Unify build process video',
+      title: 'Unify Social build process video',
     },
   },
   {
@@ -41,6 +39,7 @@ export const projects = [
     summary:
       'A full-stack skill-trading marketplace where users exchange knowledge as currency, recognized by GDSC and the SFU CS Diversity Awards.',
     video: learnverseVideo,
+    poster: '/projects/learnverse.webp',
     tags: ['React', 'TypeScript', 'Firebase Auth', 'Firestore', 'Cloud Functions'],
     points: [
       'Built responsive marketplace flows with search, filtering, profiles, and skill exchange interactions.',
@@ -49,13 +48,23 @@ export const projects = [
     ],
     featureImages: [
       {
-        src: gdscWinnersImage,
+        src: '/projects/learnverse-team.webp',
+        width: 960,
+        height: 720,
         alt: 'Learnverse team receiving GDSC recognition',
         label: 'GDSC 2nd place',
       },
-      { src: gdscGroupImage, alt: 'GDSC competition group photo', label: 'competition day' },
       {
-        src: sfuAwardImage,
+        src: '/projects/competition-day.webp',
+        width: 960,
+        height: 720,
+        alt: 'GDSC competition group photo',
+        label: 'Competition day',
+      },
+      {
+        src: '/projects/sfu-award.webp',
+        width: 480,
+        height: 720,
         alt: 'SFU CS Diversity Award finalist recognition',
         label: 'Diversity award',
       },
@@ -69,6 +78,7 @@ export const projects = [
     summary:
       'A coverage path planning system for navigating complex 3D ship hull surfaces using graph-based neural activity propagation.',
     video: pathplanningVideo,
+    poster: '/projects/subvision.webp',
     tags: ['Python', 'NumPy', 'KDTree', 'Matplotlib', '3D Geometry'],
     points: [
       'Converted STL mesh data into structured point cloud graphs for surface coverage planning.',
@@ -84,6 +94,7 @@ export const projects = [
     summary:
       'A practice-driven Blender learning platform where users solve 3D modeling challenges with real-time validation and AI-guided hints.',
     video: bleetVideo,
+    poster: '/projects/bleet.webp',
     tags: ['Python', 'Blender API', 'FastAPI', 'Next.js', 'MongoDB', 'LLaVA'],
     links: [
       {
@@ -105,6 +116,7 @@ export const projects = [
     summary:
       'A feature-based panorama stitching pipeline built around keypoint detection, robust matching, homography estimation, and image blending.',
     video: panoramizerVideo,
+    poster: '/projects/panoramizer.webp',
     tags: ['C++17', 'OpenCV', 'SIFT', 'RANSAC', 'Homography'],
     points: [
       'Implemented custom FAST and Harris corner detection for robust keypoint extraction.',
@@ -120,6 +132,7 @@ export const projects = [
     summary:
       'A multi-threaded 2D Java game engine with synchronized rendering, enemy behavior, collision systems, game states, and tested core logic.',
     video: hungryDougVideo,
+    poster: '/projects/hungry-doug.webp',
     tags: ['Java', 'Multithreading', 'JUnit', 'Mockito', 'Maven', 'OOP'],
     points: [
       'Engineered a synchronized game loop and rendering pipeline with Canvas and BufferStrategy.',
@@ -129,4 +142,4 @@ export const projects = [
   },
 ]
 
-export { gdscWinnersImage, sfuAwardImage, stockReportPdf }
+export { stockReportPdf }

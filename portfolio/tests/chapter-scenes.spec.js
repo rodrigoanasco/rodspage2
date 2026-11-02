@@ -102,8 +102,7 @@ test('navigation, theme, and route anchors remain usable', async ({ page }) => {
     .getByRole('link', { name: 'Projects', exact: true })
     .click()
   await expect(page).toHaveURL(/\/projects$/)
-  await expect(
-    page.getByRole('heading', { name: 'Projects that turn ideas into working systems.', level: 1 }),
-  ).toBeVisible()
-  await expect(page.locator('#subvision video')).not.toHaveAttribute('poster')
+  await expect(page.getByRole('heading', { name: 'Projects', level: 1 })).toBeVisible()
+  await expect(page.locator('#subvision video')).toHaveCount(0)
+  await expect(page.locator('#subvision .project-video-preview')).toHaveCount(1)
 })

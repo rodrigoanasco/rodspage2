@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react'
 import AboutPage from './AboutPage'
 import ContactPage from './ContactPage'
-import ProjectsPage from './ProjectsPage'
 import HomePage from './components/home/HomePage'
 import useHomeScrollPresentation from './hooks/useHomeScrollPresentation'
 import usePortfolioNavigation, { legalRoutes } from './hooks/usePortfolioNavigation'
@@ -9,6 +8,7 @@ import useThemePreference from './hooks/useThemePreference'
 import './App.css'
 
 const BlogPage = lazy(() => import('./BlogPage'))
+const ProjectsPage = lazy(() => import('./ProjectsPage'))
 const LegalPage = lazy(() => import('./LegalPage'))
 const publicPages = {
   about: AboutPage,
@@ -33,7 +33,13 @@ export default function App() {
   const PublicPage = publicPages[route]
   if (PublicPage) {
     return (
-      <Suspense fallback={<div className="route-loading">Loading blog...</div>}>
+      <Suspense
+        fallback={
+          <div className="route-loading" role="status">
+            Loading {route}...
+          </div>
+        }
+      >
         <PublicPage
           onHome={navigation.home}
           onAbout={navigation.about}

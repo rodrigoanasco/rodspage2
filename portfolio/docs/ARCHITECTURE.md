@@ -82,6 +82,10 @@ Database setup scripts remain explicit operations. Formatting or testing does no
 
 ## Formatting and verification
 
+Projects uses the same journal typography as About. Its route is lazy-loaded; project
+videos use an explicit Play button and pause offscreen. Media derivatives, regeneration,
+and measured checks are documented in [PROJECTS_PERFORMANCE.md](PROJECTS_PERFORMANCE.md).
+
 Run from `portfolio/`:
 
 ```sh
