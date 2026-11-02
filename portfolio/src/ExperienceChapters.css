@@ -1,0 +1,78 @@
+.chapter-section-opening {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 24px;
+  padding: 0 0 42px;
+}
+.chapter-section-opening h2 {
+  margin: 0;
+  color: var(--text-main);
+  font: 600 clamp(2rem, 4vw, 3.2rem)/1.12 'Inter', sans-serif;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.chapter-project-link:focus-visible { outline: 2px solid var(--primary); outline-offset: 6px; }
+.experience-chapters { min-width: 0; }
+.experience-chapter { scroll-margin-top: 100px; border-top: 1px solid var(--border); }
+.chapter-stage { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; gap: clamp(32px, 5vw, 72px); padding: 48px 0 64px; }
+.chapter-copy { min-width: 0; }
+.chapter-copy h3 { margin: 0 0 10px; color: var(--text-main); font: 600 clamp(1.6rem, 2.7vw, 2.4rem)/1.15 'Inter', sans-serif; letter-spacing: -0.025em; text-wrap: balance; }
+.chapter-copy .chapter-role { margin: 0 0 8px; font-size: 17px; font-weight: 500; color: var(--text-main); }
+.chapter-period { margin: 0 0 26px; color: var(--text-muted); font-size: 14px; line-height: 1.6; font-variant-numeric: tabular-nums; }
+.chapter-copy h4 { margin: 0 0 16px; color: var(--text-main); font-size: 18px; font-weight: 500; line-height: 1.5; text-wrap: pretty; }
+.chapter-summary { max-width: 65ch; margin: 0 0 22px; color: var(--text-muted); font-size: 15px; line-height: 1.75; }
+.chapter-highlights { display: grid; gap: 12px; margin: 0; padding-left: 18px; color: var(--text-muted); font-size: 14px; line-height: 1.7; }
+.chapter-highlights li { padding-left: 3px; }
+.chapter-highlights li::marker { color: var(--primary); }
+.chapter-project-link { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; width: fit-content; margin-top: 22px; color: var(--text-main); font-size: 14px; text-decoration-line: underline; text-decoration-color: var(--border); text-underline-offset: 6px; transition: text-decoration-color 150ms ease-out; }
+.chapter-project-link svg { width: 15px; height: 15px; transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1); }
+.chapter-project-link:hover { text-decoration-color: currentColor; }
+@media (hover: hover) { .chapter-project-link:hover svg { transform: translate(2px, -2px); } }
+.chapter-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; align-items: start; }
+.chapter-photo { min-width: 0; margin: 0; }
+.chapter-photo:first-child { grid-column: 1 / -1; }
+.chapter-photo img { display: block; width: 100%; aspect-ratio: 16 / 11; object-fit: cover; border-radius: 12px; background: var(--surface-solid); }
+.chapter-photo:not(:first-child) img { aspect-ratio: 4 / 3; object-fit: contain; }
+.chapter-photo figcaption { margin-top: 9px; color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+.chapter-gallery-phone { grid-template-columns: 0.72fr 1fr; }
+.chapter-gallery-phone .chapter-photo:first-child { grid-column: 1; grid-row: 1 / span 2; }
+.chapter-gallery-phone .chapter-photo:first-child img { aspect-ratio: 9 / 19.5; object-fit: contain; background: transparent; border-radius: 0; }
+.chapter-gallery-phone .chapter-photo:not(:first-child) img { aspect-ratio: 4 / 3; object-fit: cover; }
+.chapter-gallery-phone .chapter-photo-3 { grid-column: 1 / -1; }
+.chapter-gallery-phone .chapter-photo-3 img { aspect-ratio: 16 / 7; object-fit: contain; }
+.volunteer-chapters { border-bottom: 1px solid var(--border); }
+.volunteer-chapter .chapter-stage { grid-template-columns: 64px minmax(0, 1fr); gap: 24px; padding: 30px 0; }
+.chapter-volunteer-logo { display: block; width: 64px; height: 64px; padding: 8px; object-fit: contain; border-radius: 12px; background: var(--logo-tile-bg); }
+.volunteer-chapter .chapter-copy h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); margin-bottom: 8px; }
+.volunteer-chapter .chapter-role { font-size: 15px; margin-bottom: 6px; }
+.volunteer-chapter .chapter-period { margin-bottom: 14px; }
+.volunteer-chapter .chapter-summary { max-width: 75ch; margin-bottom: 0; }
+@media (max-width: 900px) {
+  .chapter-stage { grid-template-columns: minmax(0, 1fr); gap: 30px; padding: 36px 0 48px; }
+  .chapter-gallery { max-width: 640px; }
+  .chapter-gallery:not(.chapter-gallery-phone) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .chapter-gallery:not(.chapter-gallery-phone) .chapter-photo:first-child { grid-column: auto; }
+  .chapter-gallery:not(.chapter-gallery-phone) .chapter-photo img { aspect-ratio: 4 / 3; object-fit: contain; }
+  .chapter-gallery-phone { max-width: 480px; }
+}
+@media (max-width: 600px) {
+  .chapter-section-opening { align-items: start; flex-direction: column; gap: 14px; padding-bottom: 28px; }
+  .chapter-stage { padding: 30px 0 40px; }
+  .chapter-copy h3 { font-size: 27px; }
+  .chapter-copy .chapter-role { font-size: 16px; }
+  .chapter-copy h4 { font-size: 17px; }
+  .chapter-period { margin-bottom: 22px; }
+  .chapter-gallery { gap: 16px 12px; }
+  .chapter-gallery:not(.chapter-gallery-phone) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chapter-gallery:not(.chapter-gallery-phone) .chapter-photo:first-child { grid-column: 1 / -1; }
+  .chapter-gallery:not(.chapter-gallery-phone) .chapter-photo:first-child img { aspect-ratio: 16 / 10; }
+  .chapter-photo figcaption { font-size: 11px; }
+  .volunteer-chapter .chapter-stage { grid-template-columns: 44px minmax(0, 1fr); gap: 16px; padding: 25px 0; }
+  .chapter-volunteer-logo { width: 44px; height: 44px; padding: 5px; border-radius: 8px; }
+  .volunteer-chapter .chapter-copy h3 { font-size: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chapter-project-link, .chapter-project-link svg { transition: none; }
+  .chapter-project-link:hover svg { transform: none; }
+}

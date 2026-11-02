@@ -4,6 +4,21 @@
   overflow-x: clip;
 }
 
+:where(a, button, input, textarea, select, summary):focus-visible {
+  outline: 3px solid var(--accent-strong, #d58a98);
+  outline-offset: 4px;
+}
+
+.skip-link { position: fixed; z-index: 100; top: 8px; left: 16px; padding: 12px 18px; color: var(--text-main); background: var(--surface-solid); transform: translateY(-160%); }
+.skip-link:focus { transform: translateY(0); }
+
+.contact-form-body .contact-privacy-consent { display: flex; align-items: flex-start; gap: 12px; }
+.contact-form-body .contact-privacy-consent input { width: 20px; height: 20px; flex: 0 0 20px; margin: 3px 0 0; padding: 0; accent-color: var(--primary-dark); }
+.contact-form-body .contact-privacy-consent span { color: var(--text-muted); font-size: 0.875rem; font-weight: 400; line-height: 1.6; }
+.contact-privacy-note { margin: 0; color: var(--text-muted); font-size: 0.875rem; line-height: 1.6; }
+.contact-privacy-consent a { color: var(--primary-dark); text-underline-offset: 3px; }
+.contact-form-body button:disabled { cursor: not-allowed; }
+
 .route-loading {
   min-height: 100vh;
   display: grid;
@@ -45,7 +60,7 @@
   --window-bar-bg: rgba(17, 24, 29, 0.92);
   --input-bg: rgba(255, 255, 255, 0.08);
   --input-focus-bg: rgba(255, 255, 255, 0.12);
-  --input-placeholder: rgba(243, 240, 232, 0.4);
+  --input-placeholder: #aebbb3;
   --button-bg: #f3f0e8;
   --button-text: #0b1014;
   --button-hover: var(--primary);
@@ -85,7 +100,7 @@
   --window-bar-bg: rgba(244, 242, 236, 0.9);
   --input-bg: rgba(255, 255, 255, 0.62);
   --input-focus-bg: rgba(255, 255, 255, 0.86);
-  --input-placeholder: rgba(17, 17, 17, 0.38);
+  --input-placeholder: #5e665f;
   --button-bg: #1e1e1b;
   --button-text: #ffffff;
   --button-hover: var(--primary-dark);
@@ -1268,6 +1283,12 @@
   box-shadow: 0 0 0 4px rgba(129, 161, 139, 0.15);
 }
 
+.contact-form-body input:focus-visible,
+.contact-form-body textarea:focus-visible {
+  outline: 3px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+
 .contact-form-body button {
   min-height: 52px;
   display: inline-flex;
@@ -1882,4 +1903,21 @@ footer p {
   .hero-email {
     font-size: 1rem;
   }
+}
+
+/* Keep policy links readable alongside the existing footer navigation. */
+footer:has(.footer-legal) { height: auto; min-height: 104px; padding-block: 18px; }
+footer .footer-inner:has(.footer-legal) { height: auto; flex-wrap: wrap; gap: 16px 24px; }
+.footer-legal { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 20px; }
+.footer-legal a { color: #fff; font: 400 13px/1.5 'Inter', sans-serif; text-underline-offset: 3px; }
+@media (max-width: 900px) {
+  footer .footer-inner:has(.footer-legal) { justify-content: center; width: min(100%, 680px); }
+  footer .footer-inner:has(.footer-legal) .footer-socials { width: auto; }
+  footer .footer-inner:has(.footer-legal) .footer-nav { flex: 1 1 100%; flex-wrap: wrap; row-gap: 12px; }
+  footer .footer-inner:has(.footer-legal) p { width: auto; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.00001s !important; animation-iteration-count: 1 !important; transition-duration: 0.00001s !important; scroll-behavior: auto !important; }
+  .experience-wrapper, .projects-reveal { opacity: 1; transform: none; }
 }

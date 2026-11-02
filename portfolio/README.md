@@ -30,9 +30,18 @@ The contact form sends through the server-side `/api/contact` function and requi
 2. Copy `.env.example` to `.env.local` for local development and add all six values. Add the same values in the Vercel project's Environment Variables settings.
 3. In the EmailJS template, use a verified address that you control as the fixed **From email**. Do not put `{{reply_to}}` or any visitor-controlled value in that field.
 4. Set the template's **Reply-To** field to `{{reply_to}}`. The visitor address is deliberately sent only through that template variable.
-5. Redeploy after adding or changing environment variables.
+5. Add `{{privacy_consent}}` and `{{privacy_acknowledged_at}}` to the EmailJS template if delivered messages should retain the submitted acknowledgement and its server timestamp. The endpoint sends these fields, but cannot change the provider template.
+6. Deploy the reviewed changes and configuration after production approval.
 
-The endpoint validates Turnstile server-side, rejects the portfolio owner's address as a visitor address, validates input lengths, includes a honeypot, and permits at most five attempts per IP in a 15-minute warm-instance window. For a strict distributed quota across all serverless instances, also configure a Vercel Firewall rate-limit rule for `POST /api/contact`.
+The endpoint requires `privacyConsent: true`, accepts an optional name, validates Turnstile server-side, rejects the portfolio owner's address as a visitor address, validates input lengths, and includes a honeypot. It permits at most five attempts per address in a fixed 15-minute warm-instance window, stores salted identifiers rather than raw IPs, caps the map at 10,000 entries, and prunes expired entries on the next request. For a strict distributed quota across all serverless instances, also configure a provider firewall/distributed limit for `POST /api/contact`. Delivery error logs omit provider bodies and exception details.
+
+## Privacy review and verification
+
+Read [LEGAL_AND_PRIVACY_REVIEW.md](docs/LEGAL_AND_PRIVACY_REVIEW.md) and complete [PRIVACY_OPERATIONS.md](docs/PRIVACY_OPERATIONS.md) before publication sign-off. Source changes do not establish media rights, operator jurisdiction, or live provider retention. The policy routes are `/privacy`, `/terms`, `/cookies`, and `/refunds`.
+
+Run `npm run lint`, `npm test`, and `npm run build` for local checks. For browser checks, run `npx playwright install chromium` once and then `npm run test:e2e`. The isolated browser server uses dummy public provider keys and mocked contact/blog APIs; tests never send a real inquiry. A local Vite server must not already occupy port 5173. Set `PLAYWRIGHT_CHANNEL=chrome` only if intentionally using an installed Chrome instead of the bundled Chromium.
+
+Local font licenses and copyright notices are included in `public/licenses/fonts/` and copied into production output. When updating font packages, refresh these notices from each package's `LICENSE` file.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

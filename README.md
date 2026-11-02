@@ -157,13 +157,7 @@ ffmpeg -i input.mp4 -vf "scale='min(1280,iw)':-2" -c:v libx264 -crf 28 -preset s
 
 ## Contact Form
 
-The contact form uses EmailJS in `ContactSection.jsx`. The service ID, template ID, public key, recipient name, and recipient email are configured in that file.
-
-If these values change, update:
-
-```text
-portfolio/src/ContactSection.jsx
-```
+The contact form submits to the server-side `/api/contact` function after explicit privacy acknowledgement and a Turnstile check. Name is optional. EmailJS credentials remain in server environment variables; only the Turnstile site key is public. See `portfolio/README.md` for configuration and `portfolio/docs/LEGAL_AND_PRIVACY_REVIEW.md` for the implementation review and outstanding owner confirmations.
 
 ## Notes for Future Updates
 

@@ -5,6 +5,7 @@ import BlogPosts from './BlogPosts'
 import instagramLogo from './assets/images/tech_stack/instagram 1.png'
 import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
 import ThemeToggle from './ThemeToggle'
+import LegalLinks from './LegalLinks'
 import './BlogPage.css'
 
 const clerkKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -257,7 +258,7 @@ function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThe
       <header className="top-nav blog-top-nav">
         <a className="left-logo-home blog-logo-link" href="/" onClick={onHome}>Rodrigo.A</a>
         <div className="nav-actions">
-          <nav>
+          <nav aria-label="Main navigation">
             <a href="/" onClick={onHome}>Home</a>
             <a href="/about" onClick={onAbout}>About me</a>
             <a href="/projects" onClick={onProjects}>Projects</a>
@@ -302,6 +303,7 @@ function BlogPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThe
             <a href="/blog" onClick={onBlog}>Blog</a>
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
+          <LegalLinks />
           <p>&copy; {new Date().getFullYear()} Rodrigo Anasco. All rights reserved</p>
         </div>
       </footer>

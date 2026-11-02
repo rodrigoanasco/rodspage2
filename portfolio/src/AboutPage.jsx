@@ -16,6 +16,7 @@ import aboutTryingThingsImage from './assets/images/about_me_images/trying_new_t
 import instagramLogo from './assets/images/tech_stack/instagram 1.png'
 import linkedinLogo from './assets/images/tech_stack/linkedin-original.svg'
 import ThemeToggle from './ThemeToggle'
+import LegalLinks from './LegalLinks'
 import './AboutPage.css'
 
 function AboutPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onThemeToggle }) {
@@ -72,7 +73,7 @@ function AboutPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onTh
       <header className="top-nav about-top-nav">
         <a className="left-logo-home about-logo-link" href="/" onClick={onHome}>Rodrigo.A</a>
         <div className="nav-actions">
-          <nav>
+          <nav aria-label="Main navigation">
             <a href="/" onClick={onHome}>Home</a>
             <a className="is-active" href="/about" onClick={onAbout}>About me</a>
             <a href="/projects" onClick={onProjects}>Projects</a>
@@ -211,7 +212,8 @@ function AboutPage({ onHome, onAbout, onProjects, onBlog, onContact, theme, onTh
             <a href="/blog" onClick={onBlog}>Blog</a>
             <a href="/contact" onClick={onContact}>Contact</a>
           </nav>
-          <p>&copy; 2025 Rodrigo Anasco. All rights reserved</p>
+          <LegalLinks />
+          <p>&copy; {new Date().getFullYear()} Rodrigo Anasco. All rights reserved</p>
         </div>
       </footer>
     </div>
